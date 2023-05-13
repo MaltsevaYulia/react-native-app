@@ -53,8 +53,8 @@ export default function App() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             keyboardVerticalOffset="-147"
           > */}
-          <RegistrationScreen />
-          {/* <LoginScreen /> */}
+          {/* <RegistrationScreen /> */}
+          <LoginScreen />
           {/* <PostsScreen/> */}
           <StatusBar style="auto" />
           {/* </KeyboardAvoidingView> */}
