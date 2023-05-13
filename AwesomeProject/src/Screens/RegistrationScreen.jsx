@@ -44,9 +44,14 @@ export const RegistrationScreen = () => {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const onSubmit = () => {
+    console.log("email", email);
+  };
+
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset="-147"
     >
       <View style={styles.form}>
@@ -61,7 +66,7 @@ export const RegistrationScreen = () => {
           placeholder="Логин"
           placeholderTextColor="#BDBDBD"
           value={login}
-          onChangeText={text => setLogin(text)}
+          onChangeText={(text) => setLogin(text)}
           onFocus={handleFocusLog}
           onBlur={handleBlurLog}
         />
@@ -70,7 +75,7 @@ export const RegistrationScreen = () => {
           placeholder="Адрес электронной почты"
           placeholderTextColor="#BDBDBD"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           onFocus={handleFocusEmail}
           onBlur={handleBlurEmail}
         />
@@ -81,7 +86,7 @@ export const RegistrationScreen = () => {
             placeholderTextColor="#BDBDBD"
             secureTextEntry={!showPassword}
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={(text) => setPassword(text)}
             onFocus={handleFocusPass}
             onBlur={handleBlurPass}
           />
@@ -90,11 +95,11 @@ export const RegistrationScreen = () => {
             style={styles.passwordToggle}
           >
             <Text style={styles.show}>
-              {showPassword ? 'Скрыть' : 'Показать'}
+              {showPassword ? "Скрыть" : "Показать"}
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={onSubmit}>
           <Text style={styles.btnTitle}>Зарегистрироваться</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.link}>
