@@ -47,6 +47,7 @@ export const RegistrationScreen = () => {
 
   const onSubmit = () => {
     console.log("email", email);
+    console.log("login", login);
   };
 
   return (
