@@ -12,24 +12,11 @@ import { LoginScreen } from "./src/Screens/LoginScreen";
 import { RegistrationScreen } from "./src/Screens/RegistrationScreen";
 import { PostsScreen } from "./src/Screens/PostsScreen";
 import { useFonts } from "expo-font";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Home } from "./src/Screens/Home";
 
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Open up App.js to start working on your app!</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
+const MainStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -43,24 +30,37 @@ export default function App() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <ImageBackground
-          style={styles.bg}
-          source={require("./src/assets/images/photo-bg.jpg")}
-        >
-          {/* <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset="-147"
-          > */}
-          {/* <RegistrationScreen /> */}
-          <LoginScreen />
-          {/* <PostsScreen/> */}
-          <StatusBar style="auto" />
-          {/* </KeyboardAvoidingView> */}
-        </ImageBackground>
-      </View>
-    </TouchableWithoutFeedback>
+    <>
+      <NavigationContainer>
+        <MainStack.Navigator>
+          <MainStack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <MainStack.Screen
+            name="Registration"
+            component={RegistrationScreen}
+            options={{ headerShown: false }}
+          />
+          <MainStack.Screen name='Home' component={Home} options={{headerShown:false}} />
+        </MainStack.Navigator>
+      </NavigationContainer>
+
+      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <ImageBackground
+            style={styles.bg}
+            source={require("./src/assets/images/photo-bg.jpg")}
+          >
+            {/* <RegistrationScreen /> */}
+            {/* <LoginScreen /> */}
+            {/* <PostsScreen/> */}
+            {/* <StatusBar style="auto" />
+          </ImageBackground> */}
+        {/* </View> */}
+      {/* </TouchableWithoutFeedback> */} 
+    </>
   );
 }
 

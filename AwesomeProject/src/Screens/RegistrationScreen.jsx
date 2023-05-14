@@ -6,19 +6,20 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from 'react';
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export const RegistrationScreen = () => {
-  const [login, setLogin] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isFocusedLog, setIsFocusedLog] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPass, setIsFocusedPass] = useState(false);
-
+  const navigation = useNavigation();
   const handleFocusLog = () => setIsFocusedLog(true);
   const handleBlurLog = () => setIsFocusedLog(false);
   const handleFocusEmail = () => setIsFocusedEmail(true);
@@ -28,17 +29,17 @@ export const RegistrationScreen = () => {
 
   const inputStyleLog = {
     ...styles.input,
-    borderColor: isFocusedLog ? '#FF6C00' : '#E8E8E8',
+    borderColor: isFocusedLog ? "#FF6C00" : "#E8E8E8",
   };
 
   const inputStyleEmail = {
     ...styles.input,
-    borderColor: isFocusedEmail ? '#FF6C00' : '#E8E8E8',
+    borderColor: isFocusedEmail ? "#FF6C00" : "#E8E8E8",
   };
 
   const inputStyleEPass = {
     ...styles.passwordContainer,
-    borderColor: isFocusedPass ? '#FF6C00' : '#E8E8E8',
+    borderColor: isFocusedPass ? "#FF6C00" : "#E8E8E8",
   };
 
   const toggleShowPassword = () => {
@@ -103,7 +104,7 @@ export const RegistrationScreen = () => {
         <TouchableOpacity style={styles.btn} onPress={onSubmit}>
           <Text style={styles.btnTitle}>Зарегистрироваться</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.link}>
+        <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('Login')}>
           <Text style={styles.linkText}>Уже есть аккаунт? Войти</Text>
         </TouchableOpacity>
       </View>
@@ -114,24 +115,24 @@ export const RegistrationScreen = () => {
 const styles = StyleSheet.create({
   //RegistrationScreen styles:
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     // flex: 0.7,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   avaWrapper: {
-    position: 'absolute',
+    position: "absolute",
     width: 120,
     height: 120,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     borderRadius: 16,
     top: 0,
-    left: '50%',
+    left: "50%",
     transform: [{ translateX: -60 }, { translateY: -60 }],
   },
   addBtn: {
-    position: 'absolute',
+    position: "absolute",
     // borderColor: '#FF6C00',
     // borderRadius: '50%',
     // borderWidth: 1,
@@ -143,13 +144,13 @@ const styles = StyleSheet.create({
     transform: [{ translateX: 12.5 }],
   },
   title: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: "Roboto-Medium",
     fontSize: 30,
     fontWeight: 500,
-    color: '#212121',
+    color: "#212121",
     marginTop: 92,
     marginBottom: 32,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   input: {
@@ -158,10 +159,10 @@ const styles = StyleSheet.create({
     // borderColor: '#E8E8E8',
     borderRadius: 8,
     padding: 16,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     // placeholderTextColor: '#BDBDBD',
-    color: '#212121',
-    fontFamily: 'Roboto-Regular',
+    color: "#212121",
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
@@ -169,52 +170,52 @@ const styles = StyleSheet.create({
     // position: 'relative',
   },
   btn: {
-    backgroundColor: '#FF6C00',
+    backgroundColor: "#FF6C00",
     height: 40,
     borderRadius: 100,
     marginTop: 43,
     marginBottom: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 16,
   },
   btnTitle: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   show: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
-    color: '#1B4371',
+    color: "#1B4371",
   },
   linkText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
-    color: '#1B4371',
-    textAlign: 'center',
+    color: "#1B4371",
+    textAlign: "center",
     marginBottom: 45,
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'base-line',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "base-line",
+    justifyContent: "space-between",
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 8,
     padding: 16,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     marginHorizontal: 16,
     // marginBottom: 12,
   },
   passText: {
-    color: '#212121',
+    color: "#212121",
     fontSize: 16,
     lineHeight: 19,
   },

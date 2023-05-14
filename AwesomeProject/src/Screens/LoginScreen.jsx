@@ -6,17 +6,19 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from 'react';
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Layout } from "../components/Layout";
+import { useNavigation } from "@react-navigation/native";
 
 export const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPass, setIsFocusedPass] = useState(false);
-
+  const navigation = useNavigation();
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -28,144 +30,151 @@ export const LoginScreen = () => {
 
   const inputStyleEmail = {
     ...styles.input,
-    borderColor: isFocusedEmail ? '#FF6C00' : '#E8E8E8',
+    borderColor: isFocusedEmail ? "#FF6C00" : "#E8E8E8",
   };
 
   const inputStyleEPass = {
     ...styles.passwordContainer,
-    borderColor: isFocusedPass ? '#FF6C00' : '#E8E8E8',
+    borderColor: isFocusedPass ? "#FF6C00" : "#E8E8E8",
   };
 
   const onSubmit = () => {
-    console.log("email", email);
+    navigation.navigate('Home')
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset="-212"
-    >
-      <View style={styles.form}>
-        <Text style={styles.title}>Войти</Text>
-        <TextInput
-          style={inputStyleEmail}
-          placeholder="Адрес электронной почты"
-          placeholderTextColor="#BDBDBD"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          onFocus={handleFocusEmail}
-          onBlur={handleBlurEmail}
-        />
-        <View style={inputStyleEPass}>
+    <Layout>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset="-212"
+      >
+        <View style={styles.form}>
+          <Text style={styles.title}>Войти</Text>
           <TextInput
-            style={styles.passText}
-            placeholder="Пароль"
+            style={inputStyleEmail}
+            placeholder="Адрес электронной почты"
             placeholderTextColor="#BDBDBD"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            onFocus={handleFocusPass}
-            onBlur={handleBlurPass}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            onFocus={handleFocusEmail}
+            onBlur={handleBlurEmail}
           />
+          <View style={inputStyleEPass}>
+            <TextInput
+              style={styles.passText}
+              placeholder="Пароль"
+              placeholderTextColor="#BDBDBD"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              onFocus={handleFocusPass}
+              onBlur={handleBlurPass}
+            />
+            <TouchableOpacity
+              onPress={toggleShowPassword}
+              style={styles.passwordToggle}
+            >
+              <Text style={styles.show}>
+                {showPassword ? "Скрыть" : "Показать"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.btn} onPress={onSubmit}>
+            <Text style={styles.btnTitle}>Войти</Text>
+          </TouchableOpacity>
           <TouchableOpacity
-            onPress={toggleShowPassword}
-            style={styles.passwordToggle}
+            style={styles.link}
+            onPress={() => navigation.navigate("Registration")}
           >
-            <Text style={styles.show}>
-              {showPassword ? "Скрыть" : "Показать"}
+            <Text style={styles.linkText}>
+              Нет аккаунта? Зарегистрироваться
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.btn} onPress={onSubmit}>
-          <Text style={styles.btnTitle}>Войти</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.link}>
-          <Text style={styles.linkText}>Нет аккаунта? Зарегистрироваться</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
   //LoginScreen styles:
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     // flex: 0.6,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   title: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: "Roboto-Medium",
     fontSize: 30,
     fontWeight: 500,
-    color: '#212121',
+    color: "#212121",
     marginTop: 32,
     marginBottom: 32,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   input: {
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 8,
     padding: 16,
-    backgroundColor: '#F6F6F6',
-    color: '#212121',
+    backgroundColor: "#F6F6F6",
+    color: "#212121",
     fontSize: 16,
     lineHeight: 19,
     marginHorizontal: 16,
     // position: 'relative',
   },
   btn: {
-    backgroundColor: '#FF6C00',
+    backgroundColor: "#FF6C00",
     height: 40,
     borderRadius: 100,
     marginTop: 31,
     marginBottom: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 16,
   },
   btnTitle: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   show: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
-    color: '#1B4371',
+    color: "#1B4371",
   },
   link: { marginBottom: 111 },
   linkText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
-    color: '#1B4371',
-    textAlign: 'center',
+    color: "#1B4371",
+    textAlign: "center",
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 8,
     padding: 16,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     marginHorizontal: 16,
     marginBottom: 12,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   passText: {
-    color: '#212121',
+    color: "#212121",
     fontSize: 16,
     lineHeight: 19,
   },
