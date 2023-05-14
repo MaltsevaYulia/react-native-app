@@ -1,51 +1,63 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
 import {
-  AntDesign,
-  Feather,
-  MaterialIcons,
-
-} from "@expo/vector-icons";
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
 export const CreatePostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Создать публикацию</Text>
-        <View style={styles.iconContainer}>
-          <Feather name="arrow-left" size={24} color="#BDBDBD" />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Создать публикацию</Text>
+          <View style={styles.iconContainer}>
+            <Feather name="arrow-left" size={24} color="#BDBDBD" />
+          </View>
         </View>
-      </View>
-      <View style={styles.main}>
-        <View style={styles.photo}>
-          <View style={styles.round}>
-            <MaterialIcons
-              style={styles.camera}
-              name="photo-camera"
-              size={24}
-              color="black"
+        <View style={styles.main}>
+          <View style={styles.photo}>
+            <View style={styles.round}>
+              <MaterialIcons
+                style={styles.camera}
+                name="photo-camera"
+                size={24}
+                color="black"
+              />
+            </View>
+          </View>
+          <Text style={styles.addPhoto}>Загрузите фото</Text>
+          <View style={styles.photoInfo}>
+            <TextInput
+              style={styles.nameInpt}
+              placeholder="Название..."
+              placeholderTextColor="#BDBDBD"
             />
+            <View style={styles.location}>
+              <Feather name="map-pin" size={24} color="#BDBDBD" />
+              <TextInput
+                style={styles.locText}
+                placeholder="Местность..."
+                placeholderTextColor="#BDBDBD"
+              />
+            </View>
           </View>
+          <TouchableOpacity style={styles.pablishBtn}>
+            <Text style={styles.btnTitle}>Опубликовать</Text>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.addPhoto}>Загрузите фото</Text>
-        <View style={styles.photoInfo}>
-          <TextInput style={styles.nameInpt} placeholder="Название..." />
-          <View style={styles.location}>
-            <Feather name="map-pin" size={24} color="#BDBDBD" />
-            <TextInput placeholder="Местность..." />
-          </View>
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.btn}>
+            <Feather name="trash-2" size={24} color="#BDBDBD" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.pablishBtn}>
-          <Text style={styles.btnTitle}>Опубликовать</Text>
-        </TouchableOpacity>
       </View>
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.btn}>
-          <Feather name="trash-2" size={24} color="#BDBDBD" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -54,16 +66,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    // height: 44,
     flex: 0.1,
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // gap: 31,
     borderBottomWidth: 1,
     borderBottomColor: "#E8E8E8",
-    // paddingBottom: 10,
   },
   title: {
     fontFamily: "Roboto-Medium",
@@ -101,9 +110,13 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: "50%",
   },
-  photoInfo: {
-    gap: 16,
-    marginBottom: 32,
+  camera: { color: "#BDBDBD" },
+  userName: {
+    fontFamily: "Roboto-Bold",
+    fontWeight: 700,
+    fontSize: 13,
+    lineHeight: 15,
+    color: "#212121",
   },
   addPhoto: {
     fontFamily: "Roboto-Regular",
@@ -113,10 +126,19 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     color: "#BDBDBD",
   },
+  photoInfo: {
+    gap: 16,
+    marginBottom: 32,
+  },
   nameInpt: {
+    fontFamily: "Roboto-Regular",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#E8E8E8",
+    color: "#212121",
   },
   location: {
     flexDirection: "row",
@@ -125,20 +147,26 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E8E8E8",
     gap: 4,
   },
-  camera: { color: "#BDBDBD" },
-  userName: {
-    fontFamily: "Roboto-Bold",
-    fontWeight: 700,
-    fontSize: 13,
-    lineHeight: 15,
-    color: "#212121",
-  },
-  userEmail: {
+  locText: {
     fontFamily: "Roboto-Regular",
     fontWeight: 400,
-    fontSize: 11,
-    lineHeight: 13,
-    color: "rgba(33, 33, 33, 0.8)",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  pablishBtn: {
+    paddingVertical: 16,
+    borderRadius: 100,
+    backgroundColor: "#FF6C00",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnTitle: {
+    fontFamily: "Roboto-Regular",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
   },
   footer: {
     // height: 83,
@@ -158,19 +186,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     alignItems: "center",
     justifyContent: "center",
-  },
-  pablishBtn: {
-    paddingVertical: 16,
-    borderRadius: 100,
-    backgroundColor: "#FF6C00",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnTitle: {
-    fontFamily: "Roboto-Regular",
-    fontWeight: 400,
-    fontSize: 16,
-    lineHeight: 19,
-    color: "#FFFFFF",
   },
 });
