@@ -113,54 +113,7 @@ export const useRoute = (isAuth) => {
         />
       </MaineTab.Navigator>
     );
-    return (
-      <MaineTab.Navigator
-        screenOptions={{
-          style: {
-            backgroundColor: "transparent",
-          },
-        }}
-      >
-        <MaineTab.Screen
-          name="PostsScreen"
-          component={PostsScreen}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <View style={styles.footer}>
-                <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
-              </View>
-            ),
-            tabBarActiveTintColor: "rgba(33, 33, 33, 0.8)",
-            headerShown: false,
-            tabBarVisible: false,
-          }}
-        />
-        <MaineTab.Screen
-          name="CreatePostsScreen"
-          component={CreatePostsScreen}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TouchableOpacity style={styles.btn}>
-                <Feather name="plus" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-            ),
-            tabBarActiveTintColor: "#F6F6F6",
-            headerShown: false,
-          }}
-        />
-        <MaineTab.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
-            ),
-            tabBarActiveTintColor: "rgba(33, 33, 33, 0.8)",
-            headerShown: false,
-          }}
-        />
-      </MaineTab.Navigator>
-    );
+    
   }
   return (
     <MainStack.Navigator>
