@@ -31,30 +31,39 @@ export const ProfileScreen = () => {
           color="#BDBDBD"
         />
         <Text style={styles.title}>Natali Romanova</Text>
-        <Text style={styles.text}>Лес</Text>
-        <View style={styles.postInfo}>
-          <View style={styles.likesWrapp}>
-            <Feather
-              style={styles.circleIcon}
-              name="message-circle"
-              size={24}
-              color="#FF6C00"
-            />
-            <Text style={styles.numb}>8</Text>
-            <Feather
-              style={styles.likeIcon}
-              name="thumbs-up"
-              size={24}
-              color="#FF6C00"
-            />
-            <Text>57</Text>
-          </View>
-          <View style={styles.locWrapp}>
-            <Feather name="map-pin" size={24} color="#BDBDBD" />
-            <Text>Ukraine</Text>
+        <View>
+          <Text style={styles.text}>Лес</Text>
+          <View style={styles.postInfo}>
+            <View style={styles.likesWrapp}>
+              <Feather
+                style={styles.circleIcon}
+                name="message-circle"
+                size={24}
+                color="#FF6C00"
+              />
+              <Text style={styles.numb}>8</Text>
+              <Feather
+                style={styles.likeIcon}
+                name="thumbs-up"
+                size={24}
+                color="#FF6C00"
+              />
+              <Text>57</Text>
+            </View>
+            <View style={styles.locWrapp}>
+              <Feather name="map-pin" size={24} color="#BDBDBD" />
+              <Text>Ukraine</Text>
+            </View>
           </View>
         </View>
       </View>
+      {/* <View style={styles.footer}>
+        <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
+        <TouchableOpacity style={styles.btn}>
+          <Feather name="user" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <AntDesign name="plus" size={24} color="rgba(33, 33, 33, 0.8)" />
+      </View> */}
     </Layout>
   );
 };
@@ -107,6 +116,7 @@ const styles = StyleSheet.create({
     color: "#212121",
     marginTop: 92,
     marginBottom: 32,
+    textAlign: "center",
   },
   text: {
     marginBottom: 8,
@@ -133,5 +143,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 4,
     alignItems: "center",
+  },
+  footer: {
+    // height: 83,
+    flex: 0.1,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 31,
+    borderTopWidth: 1,
+    borderTopColor: "#E8E8E8",
+  },
+  btn: {
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FF6C00",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -5,9 +5,10 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  StyleSheet,
 } from "react-native";
 import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
+// import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
 export const CreatePostsScreen = () => {

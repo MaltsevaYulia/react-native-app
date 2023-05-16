@@ -20,13 +20,13 @@ export const PostsScreen = () => {
           </View>
         </View>
       </View>
-      <View style={styles.footer}>
-        <Feather name="grid" size={24} color="#212121" />
+      {/* <View style={styles.footer}>
+        <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
         <TouchableOpacity style={styles.btn}>
           <AntDesign name="plus" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Feather name="user" size={24} color="#212121" />
-      </View>
+        <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
+      </View> */}
     </View>
   );
 };
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     right: 16,
   },
   main: {
-    flex: 0.8,
+    flex: 0.9,
     backgroundColor: '#fff',
     paddingTop: 32,
     paddingHorizontal: 16,
