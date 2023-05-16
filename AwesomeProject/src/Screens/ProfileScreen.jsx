@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     top: 0,
     left: "50%",
-    transform: [{ translateX: -60 }, { translateY: -60 }],
+    transform: [{ translateX: -50 }, { translateY: -60 }],
   },
   addBtn: {
     position: "absolute",

@@ -7,11 +7,13 @@ import { PostsScreen } from "../Screens/PostsScreen";
 import { ProfileScreen } from "../Screens/ProfileScreen";
 import { RegistrationScreen } from "../Screens/RegistrationScreen";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
+
 const MainStack = createStackNavigator();
 const MaineTab = createBottomTabNavigator();
 
 export const useRoute = (isAuth) => {
+ 
   if (isAuth) {
     return (
       <MaineTab.Navigator
@@ -63,15 +65,52 @@ export const useRoute = (isAuth) => {
               </View>
             );
           },
-          
+          // Add the headerShown option for ProfileScreen
+          // ...(route.name === "ProfileScreen" && { headerShown: false }),
         })}
       >
-        <MaineTab.Screen name="PostsScreen" component={PostsScreen} />
+        <MaineTab.Screen
+          name="PostsScreen"
+          component={PostsScreen}
+          options={() => ({
+            title: "Публикации",
+            headerTitleStyle: styles.headerTitle,
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  // Do something
+                }}
+                style={{ paddingRight: 16 }}
+              >
+                <Feather name="log-out" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
         <MaineTab.Screen
           name="CreatePostsScreen"
           component={CreatePostsScreen}
+          options={{
+            tabBarStyle: { display: "none" },
+            title: "Создать публикацию",
+            headerTitleStyle: styles.headerTitle,
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  // Do something
+                }}
+                style={{ paddingLeft: 16 }}
+              >
+                <Feather name="arrow-left" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            ),
+          }}
         />
-        <MaineTab.Screen name="ProfileScreen" component={ProfileScreen} />
+        <MaineTab.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
       </MaineTab.Navigator>
     );
     return (
@@ -145,6 +184,14 @@ export const useRoute = (isAuth) => {
 };
 
 const styles = StyleSheet.create({
+  headerTitle: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 17,
+    fontWeight: 500,
+    lineHeight: 22,
+    color: "#212121",
+    paddingVertical:11,
+  },
   footer: {
     // height: 83,
     flex: 1,

@@ -15,12 +15,12 @@ export const CreatePostsScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        {/* <View style={styles.header}>
           <Text style={styles.title}>Создать публикацию</Text>
           <View style={styles.iconContainer}>
             <Feather name="arrow-left" size={24} color="#BDBDBD" />
           </View>
-        </View>
+        </View> */}
         <View style={styles.main}>
           <View style={styles.photo}>
             <View style={styles.round}>
@@ -66,28 +66,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    flex: 0.1,
-    backgroundColor: "#fff",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#E8E8E8",
-  },
-  title: {
-    fontFamily: "Roboto-Medium",
-    fontSize: 17,
-    fontWeight: 500,
-    lineHeight: 22,
-    color: "#212121",
-  },
-  iconContainer: {
-    position: "absolute",
-    left: 16,
-  },
+  // header: {
+  //   flex: 0.1,
+  //   backgroundColor: "#fff",
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: "#E8E8E8",
+  // },
+  // title: {
+  //   fontFamily: "Roboto-Medium",
+  //   fontSize: 17,
+  //   fontWeight: 500,
+  //   lineHeight: 22,
+  //   color: "#212121",
+  // },
+  // iconContainer: {
+  //   position: "absolute",
+  //   left: 16,
+  // },
   main: {
-    flex: 0.8,
+    flex: 1,
     backgroundColor: "#fff",
     paddingTop: 32,
     paddingHorizontal: 16,
