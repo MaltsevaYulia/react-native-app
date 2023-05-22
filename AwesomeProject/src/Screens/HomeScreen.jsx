@@ -10,7 +10,7 @@ import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
 const MaineTab = createBottomTabNavigator();
 
 export const HomeScreen = ({ navigation }) => {
-  console.log("🚀 ~ HomeScreen ~ navigation:", navigation);
+  // console.log("🚀 ~ HomeScreen ~ navigation:", navigation);
   const goBack = () => {
     //   navigation.goBack();
       navigation.navigate("PostsScreen");

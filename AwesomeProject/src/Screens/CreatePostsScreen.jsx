@@ -7,11 +7,40 @@ import {
   Keyboard,
   StyleSheet,
 } from "react-native";
+
 import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
-// import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import { useEffect, useState } from "react";
 
 export const CreatePostsScreen = () => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [cameraRef, setCameraRef] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View style={styles.photo} />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  const takePhoto =async () => {
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri)
+    }
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -22,16 +51,18 @@ export const CreatePostsScreen = () => {
           </View>
         </View> */}
         <View style={styles.main}>
-          <View style={styles.photo}>
-            <View style={styles.round}>
+          {/* <View style={styles.photo}> */}
+          <Camera style={styles.photo} type={type} ref={setCameraRef}>
+            <TouchableOpacity style={styles.round} onPress={takePhoto}>
               <MaterialIcons
                 style={styles.camera}
                 name="photo-camera"
                 size={24}
                 color="black"
               />
-            </View>
-          </View>
+            </TouchableOpacity>
+          </Camera>
+          {/* </View> */}
           <Text style={styles.addPhoto}>Загрузите фото</Text>
           <View style={styles.photoInfo}>
             <TextInput

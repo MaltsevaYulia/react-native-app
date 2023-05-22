@@ -9,11 +9,11 @@ import { RegistrationScreen } from "../Screens/RegistrationScreen";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
 
+
 const MainStack = createStackNavigator();
 const MaineTab = createBottomTabNavigator();
 
 export const useRoute = (isAuth) => {
- 
   if (isAuth) {
     return (
       <MaineTab.Navigator
@@ -113,7 +113,6 @@ export const useRoute = (isAuth) => {
         />
       </MaineTab.Navigator>
     );
-    
   }
   return (
     <MainStack.Navigator>
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     lineHeight: 22,
     color: "#212121",
-    paddingVertical:11,
+    paddingVertical: 11,
   },
   footer: {
     // height: 83,
