@@ -6,24 +6,39 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   StyleSheet,
+  Image,
 } from "react-native";
 
-import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 
-export const CreatePostsScreen = () => {
+export const CreatePostsScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [cameraRef, setCameraRef] = useState(null);
+  const [photo, setPhoto] = useState("");
+  const [name, setName] = useState("");
+  const [region, setRegion] = useState("");
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === "granted");
+    })();
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      console.log("🚀 ~ status:", status)
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
     })();
   }, []);
 
@@ -34,25 +49,39 @@ export const CreatePostsScreen = () => {
     return <Text>No access to camera</Text>;
   }
 
-  const takePhoto =async () => {
+  const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      await MediaLibrary.createAssetAsync(uri)
+      await MediaLibrary.createAssetAsync(uri);
+      setPhoto(uri);
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
     }
-  }
+  };
+
+  const publish = () => {
+    navigation.navigate("DefaultPostsScreen", {
+      photo,
+      name,
+      region,
+      location,
+    });
+    setName("");
+    setRegion("");
+    setPhoto("");
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        {/* <View style={styles.header}>
-          <Text style={styles.title}>Создать публикацию</Text>
-          <View style={styles.iconContainer}>
-            <Feather name="arrow-left" size={24} color="#BDBDBD" />
-          </View>
-        </View> */}
         <View style={styles.main}>
           {/* <View style={styles.photo}> */}
           <Camera style={styles.photo} type={type} ref={setCameraRef}>
+            {photo && <Image source={{ uri: photo }} style={styles.picture} />}
             <TouchableOpacity style={styles.round} onPress={takePhoto}>
               <MaterialIcons
                 style={styles.camera}
@@ -69,6 +98,7 @@ export const CreatePostsScreen = () => {
               style={styles.nameInpt}
               placeholder="Название..."
               placeholderTextColor="#BDBDBD"
+              onChangeText={(text) => setName(text)}
             />
             <View style={styles.location}>
               <Feather name="map-pin" size={24} color="#BDBDBD" />
@@ -76,10 +106,11 @@ export const CreatePostsScreen = () => {
                 style={styles.locText}
                 placeholder="Местность..."
                 placeholderTextColor="#BDBDBD"
+                onChangeText={(text) => setRegion(text)}
               />
             </View>
           </View>
-          <TouchableOpacity style={styles.pablishBtn}>
+          <TouchableOpacity style={styles.pablishBtn} onPress={publish}>
             <Text style={styles.btnTitle}>Опубликовать</Text>
           </TouchableOpacity>
         </View>
@@ -97,26 +128,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // header: {
-  //   flex: 0.1,
-  //   backgroundColor: "#fff",
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   borderBottomWidth: 1,
-  //   borderBottomColor: "#E8E8E8",
-  // },
-  // title: {
-  //   fontFamily: "Roboto-Medium",
-  //   fontSize: 17,
-  //   fontWeight: 500,
-  //   lineHeight: 22,
-  //   color: "#212121",
-  // },
-  // iconContainer: {
-  //   position: "absolute",
-  //   left: 16,
-  // },
   main: {
     flex: 1,
     backgroundColor: "#fff",
@@ -134,7 +145,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
+  picture: { width: "100%", height: "100%" },
   round: {
+    position: "absolute",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFFFFF",
