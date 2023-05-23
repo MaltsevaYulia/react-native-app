@@ -22,60 +22,21 @@ export const PostsScreen = ({ route, navigation }) => {
       <NestedScreens.Screen
         name="DefaultPostsScreen"
         component={DefaultPostsScreen}
+        options={{ headerShown: false }}
       />
-      <NestedScreens.Screen name="CommentsScreen" component={CommentsScreen} />
-      <NestedScreens.Screen name="MapScreen" component={MapScreen}/>
+      <NestedScreens.Screen
+        name="CommentsScreen"
+        component={CommentsScreen}
+        options={{ headerShown: false }}
+      />
+      <NestedScreens.Screen
+        name="MapScreen"
+        component={MapScreen}
+        options={{ headerShown: false }}
+      />
     </NestedScreens.Navigator>
   );
-  // const [posts, setPosts] = useState([]);
-  // console.log("🚀 ~ PostsScreen ~ posts:", posts);
-  // console.log("route.params", route.params);
-
-  // useEffect(() => {
-  //   if (route.params) {
-  //     setPosts((prev) => [...prev, route.params]);
-  //   }
-  // }, [route.params]);
-
-  // return (
-  //   <View style={styles.container}>
-  //     {/* <View style={styles.header}>
-  //       <Text style={styles.title}>Публикации</Text>
-  //       <View style={styles.iconContainer}>
-  //         <Feather name="log-out" size={24} color="#BDBDBD" />
-  //       </View>
-  //     </View> */}
-  //     <View style={styles.main}>
-  //       <View style={styles.userWrapp}>
-  //         <Image source={require("../assets/images/user.jpg")} />
-  //         <View style={styles.userInfo}>
-  //           <Text style={styles.userName}>Natali Romanova</Text>
-  //           <Text style={styles.userEmail}>email@example.com</Text>
-  //         </View>
-  //       </View>
-  //       <SafeAreaView></SafeAreaView>
-  //       <FlatList
-  //         data={posts}
-  //         keyExtractor={(item, indx) => indx.toString()}
-  //         renderItem={(item) => (
-  //           <View>
-  //             <View style={styles.postContainer}>
-  //               <Image source={{ uri: item.photo }} style={styles.picture} />
-  //             </View>
-  //             <Text style={styles.postName}>{item.name}</Text>
-  //             <TouchableOpacity onPress={navigation.navigate("CommentsScreen")}>
-  //               <Feather name="message-circle" size={24} color="#BDBDBD" />
-  //             </TouchableOpacity>
-  //             <View>
-  //               <Feather name="map-pin" size={24} color="#BDBDBD" />
-  //               <Text style={styles.location}>{item.location}</Text>
-  //             </View>
-  //           </View>
-  //         )}
-  //       />
-  //     </View>
-  //   </View>
-  // );
+  
 };
 
 const styles = StyleSheet.create({

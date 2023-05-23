@@ -34,7 +34,7 @@ export const CreatePostsScreen = ({ navigation }) => {
     })();
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      console.log("🚀 ~ status:", status)
+      // console.log("🚀 ~ status:", status)
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
@@ -54,22 +54,25 @@ export const CreatePostsScreen = ({ navigation }) => {
       const { uri } = await cameraRef.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
       setPhoto(uri);
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
+      
     }
   };
 
-  const publish = () => {
+  const publish = async () => {
+    let location = await Location.getCurrentPositionAsync({});
+    // console.log("🚀 ~ publish ~ location:", location);
+    // const coords = {
+    //   latitude: location.coords.latitude,
+    //   longitude: location.coords.longitude,
+    // };
+    setLocation(location);
     navigation.navigate("DefaultPostsScreen", {
       photo,
       name,
       region,
       location,
     });
+    
     setName("");
     setRegion("");
     setPhoto("");
