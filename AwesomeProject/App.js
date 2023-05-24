@@ -6,8 +6,14 @@ import { useRoute } from "./src/hooks/routing";
 import { LoginScreen } from "./src/Screens/LoginScreen";
 import { RegistrationScreen } from "./src/Screens/RegistrationScreen";
 import { HomeScreen } from "./src/Screens/HomeScreen";
+import { Provider } from "react-redux";
+import store from "./src/redux/store";
+
+import { PersistGate } from "redux-persist/integration/react";
+import persistor from "./src/redux/store";
 
 const MainStack = createStackNavigator();
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
@@ -18,26 +24,30 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  // const routing = useRoute(false);
+
   return (
-    <NavigationContainer>
-      <MainStack.Navigator>
-        <MainStack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <MainStack.Screen
-          name="Registration"
-          component={RegistrationScreen}
-          options={{ headerShown: false }}
-        />
-        <MainStack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ headerShown: false }}
-        />
-      </MainStack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+        <NavigationContainer>
+          <MainStack.Navigator>
+            <MainStack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <MainStack.Screen
+              name="Registration"
+              component={RegistrationScreen}
+              options={{ headerShown: false }}
+            />
+            <MainStack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+          </MainStack.Navigator>
+        </NavigationContainer>
+      {/* </PersistGate> */}
+    </Provider>
   );
 }

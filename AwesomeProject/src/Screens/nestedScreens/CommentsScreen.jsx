@@ -3,7 +3,6 @@ import { View, Text, Image, StyleSheet } from "react-native";
 
 const CommentsScreen = ({ route }) => {
   const { photo } = route.params;
-  console.log("🚀 ~ CommentsScreen ~ route.params:", route.params);
 
   return (
     <View style={styles.container}>

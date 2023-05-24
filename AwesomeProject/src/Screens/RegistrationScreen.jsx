@@ -10,6 +10,8 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { register } from "../redux/auth/authOperetion";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
@@ -19,7 +21,11 @@ export const RegistrationScreen = () => {
   const [isFocusedLog, setIsFocusedLog] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPass, setIsFocusedPass] = useState(false);
+
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
+
   const handleFocusLog = () => setIsFocusedLog(true);
   const handleBlurLog = () => setIsFocusedLog(false);
   const handleFocusEmail = () => setIsFocusedEmail(true);
@@ -47,8 +53,8 @@ export const RegistrationScreen = () => {
   };
 
   const onSubmit = () => {
-    console.log("email", email);
-    console.log("login", login);
+    dispatch(register({ email, password }));
+    
   };
 
   return (
@@ -104,7 +110,10 @@ export const RegistrationScreen = () => {
         <TouchableOpacity style={styles.btn} onPress={onSubmit}>
           <Text style={styles.btnTitle}>Зарегистрироваться</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('Login')}>
+        <TouchableOpacity
+          style={styles.link}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Text style={styles.linkText}>Уже есть аккаунт? Войти</Text>
         </TouchableOpacity>
       </View>

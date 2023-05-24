@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     color: "rgba(33, 33, 33, 0.8)",
   },
   postContainer: {
-    gap:8,
+    gap: 8,
     marginBottom: 34,
   },
   photoContainer: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     height: 240,
-
+    borderColor: "#E8E8E8",
     borderWidth: 1,
     borderRadius: 8,
   },
