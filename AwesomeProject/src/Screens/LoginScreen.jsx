@@ -11,6 +11,8 @@ import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Layout } from "../components/Layout";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { logIn } from "../redux/auth/authOperetion";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +21,8 @@ export const LoginScreen = () => {
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPass, setIsFocusedPass] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -39,7 +43,8 @@ export const LoginScreen = () => {
   };
 
   const onSubmit = () => {
-    navigation.navigate('Home')
+    dispatch(logIn({ email, password }));
+    // navigation.navigate("Home");
   };
 
   return (

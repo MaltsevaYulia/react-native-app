@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
@@ -32,3 +33,19 @@ export const register = createAsyncThunk(
     }
   }
 );
+
+export const logIn = createAsyncThunk(
+  "auth/logIn",
+  async ({email, password},thunkAPI) => {
+    try {
+      const credentials = await signInWithEmailAndPassword(auth, email, password)
+      console.log("🚀 ~ credentials.user.uid:", credentials.user.uid);
+      return credentials.user.uid;
+    } catch (error) {
+      console.log("🚀 ~ error:", error)
+      return thunkAPI.rejectWithValue(error.message)
+      
+    }
+      
+  }
+)
