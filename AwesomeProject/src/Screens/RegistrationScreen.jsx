@@ -53,7 +53,7 @@ export const RegistrationScreen = () => {
   };
 
   const onSubmit = () => {
-    dispatch(register({ email, password }));
+    dispatch(register({ email, password ,login}));
     
   };
 

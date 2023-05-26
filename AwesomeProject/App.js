@@ -16,14 +16,14 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-
 import { PersistGate } from "redux-persist/integration/react";
 import persistor from "./src/redux/store";
+import { Main } from "./src/components/Main";
 
 const MainStack = createStackNavigator();
 
 export default function App() {
-  const [uid, setUid] = useState('');
+  const [uid, setUid] = useState("");
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("./src/assets/fonts/Roboto-Medium.ttf"),
@@ -40,44 +40,27 @@ export default function App() {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
-      setUid(uid)
+      setUid(uid);
       // ...
     } else {
       // User is signed out
       // ...
-      setUid('')
+      setUid("");
     }
   });
   // db.auth().onAuthStateChanged((user) => {
   //   console.log("🚀 ~ db.auth ~ user:", user)
-    
+
   //   return setUser(user)
   // });
 
-const routing = useRoute(uid);
+  // const routing = useRoute(uid);
 
   return (
     <Provider store={store}>
+      <Main/>
       {/* <PersistGate loading={null} persistor={persistor}> */}
-        <NavigationContainer>{routing}
-          {/* <MainStack.Navigator>
-            <MainStack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
-            <MainStack.Screen
-              name="Registration"
-              component={RegistrationScreen}
-              options={{ headerShown: false }}
-            />
-            <MainStack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            />
-          </MainStack.Navigator> */}
-        </NavigationContainer>
+      {/* <NavigationContainer>{routing}</NavigationContainer> */}
       {/* </PersistGate> */}
     </Provider>
   );

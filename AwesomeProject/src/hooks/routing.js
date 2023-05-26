@@ -8,13 +8,17 @@ import { ProfileScreen } from "../Screens/ProfileScreen";
 import { RegistrationScreen } from "../Screens/RegistrationScreen";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
-
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/auth/authOperetion";
 
 const MainStack = createStackNavigator();
 const MaineTab = createBottomTabNavigator();
 
 export const useRoute = (isAuth) => {
+  const dispatch = useDispatch();
+
   if (isAuth) {
+    const dispatch = useDispatch();
     return (
       <MaineTab.Navigator
         screenOptions={({ route }) => ({
@@ -78,6 +82,7 @@ export const useRoute = (isAuth) => {
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => {
+                  dispatch(logOut());
                   // Do something
                 }}
                 style={{ paddingRight: 16 }}
