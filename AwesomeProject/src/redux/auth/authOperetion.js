@@ -6,21 +6,10 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
+import { useDispatch } from "react-redux";
 import { auth } from "../../firebase/config";
 
-// export const register =async ({email,password}) => {
-//     try {
-//         const user = await createUserWithEmailAndPassword(
-//           auth,
-//           email,
-//           password
-//         );
-//     } catch (error) {
-//         throw error;
-//         console.log("🚀 ~ register ~ error:", error)
 
-//     }
-// }
 
 export const register = createAsyncThunk(
   "auth/register",
@@ -56,8 +45,13 @@ export const logIn = createAsyncThunk(
         email,
         password
       );
-      console.log("🚀 ~ credentials.user.uid:", credentials.user.uid);
-      return credentials.user.uid;
+      
+      if (credentials.user) {
+         const { uid, email, displayName } = credentials.user;
+      return { uid, email, name: displayName };
+      
+      } 
+     
     } catch (error) {
       console.log("🚀 ~ error:", error);
       return thunkAPI.rejectWithValue(error.message);
@@ -68,6 +62,7 @@ export const logIn = createAsyncThunk(
 export const logOut = createAsyncThunk("auth/logOut", async (_, thunkAPI) => {
   try {
     await auth.signOut();
+
     console.log("this is logOut operetion");
   } catch (error) {
     console.log("🚀 ~ error:", error);
@@ -90,3 +85,34 @@ export const updateUserProfile = createAsyncThunk(
     }
   }
 );
+
+
+export const authStateChangeUser = createAsyncThunk(
+  "auth/authStateChange",
+  async (_, thunkAPI) => {
+    const dispatch = useDispatch();
+    try {
+      await onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // console.log("🚀 ~ onAuthStateChanged ~ user:", user)
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/auth.user
+          const { uid, email, displayName } = user;
+          return { uid, email, name: displayName };
+          // ...
+        } else {
+          // User is signed out
+          // ...
+          console.log(
+            "Это authStateChangeUser вызываю dispatch(logOut())"
+          );
+          dispatch(logOut())
+          return null
+        }
+      });
+    } catch (error) {
+      console.log("🚀 ~ error:", error)
+      return thunkAPI.rejectWithValue(error.message)
+    }
+  }
+)

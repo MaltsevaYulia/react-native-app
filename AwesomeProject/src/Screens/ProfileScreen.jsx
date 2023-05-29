@@ -9,8 +9,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { selectUser } from "../redux/auth/selectors";
+import { useSelector } from "react-redux";
 
 export const ProfileScreen = () => {
+  const user = useSelector(selectUser);
+  console.log("🚀 ~ ProfileScreen ~ user:", user)
+ 
   return (
     <Layout>
       <View style={styles.container}>
@@ -30,7 +35,7 @@ export const ProfileScreen = () => {
           size={24}
           color="#BDBDBD"
         />
-        <Text style={styles.title}>Natali Romanova</Text>
+        <Text style={styles.title}>{ user.name}</Text>
         <View>
           <Text style={styles.text}>Лес</Text>
           <View style={styles.postInfo}>

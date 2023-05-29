@@ -1,24 +1,17 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { CreatePostsScreen } from "../Screens/CreatePostsScreen";
-import { HomeScreen } from "../Screens/HomeScreen";
-import { LoginScreen } from "../Screens/LoginScreen";
-import { PostsScreen } from "../Screens/PostsScreen";
-import { ProfileScreen } from "../Screens/ProfileScreen";
-import { RegistrationScreen } from "../Screens/RegistrationScreen";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
 import { useDispatch } from "react-redux";
-import { logOut, authStateChangeUser } from "../redux/auth/authOperetion";
+import { PostsScreen } from "../Screens/PostsScreen";
+import { logOut } from "../redux/auth/authOperetion";
+import { CreatePostsScreen } from "../Screens/CreatePostsScreen";
+import { ProfileScreen } from "../Screens/ProfileScreen";
 
-const MainStack = createStackNavigator();
 const MaineTab = createBottomTabNavigator();
 
-export const useRoute = (isAuth) => {
-  const dispatch = useDispatch();
+export const UserNav = () => {
+const dispatch = useDispatch();
 
-  if (isAuth) {
-    // const dispatch = useDispatch();
     return (
       <MaineTab.Navigator
         screenOptions={({ route }) => ({
@@ -120,27 +113,7 @@ export const useRoute = (isAuth) => {
         />
       </MaineTab.Navigator>
     );
-  }
-  return (
-    <MainStack.Navigator>
-      <MainStack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <MainStack.Screen
-        name="Registration"
-        component={RegistrationScreen}
-        options={{ headerShown: false }}
-      />
-      <MainStack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-    </MainStack.Navigator>
-  );
-};
+}
 
 const styles = StyleSheet.create({
   headerTitle: {

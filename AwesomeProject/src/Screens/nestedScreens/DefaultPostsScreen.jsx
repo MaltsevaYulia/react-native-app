@@ -9,9 +9,13 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/auth/selectors";
 
 export const DefaultPostsScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
+ const user = useSelector(selectUser);
+ console.log("🚀 ~ DefaultPostsScreen ~ user:", user)
 
   useEffect(() => {
     if (route.params) {
@@ -25,8 +29,8 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
         <View style={styles.userWrapp}>
           <Image source={require("../../assets/images/user.jpg")} />
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>Natali Romanova</Text>
-            <Text style={styles.userEmail}>email@example.com</Text>
+            <Text style={styles.userName}>{ user.name}</Text>
+            <Text style={styles.userEmail}>{ user.email}</Text>
           </View>
         </View>
         <SafeAreaView>

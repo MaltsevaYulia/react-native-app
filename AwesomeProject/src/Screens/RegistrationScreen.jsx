@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { register } from "../redux/auth/authOperetion";
+import { Layout } from "../components/Layout";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
@@ -58,66 +59,68 @@ export const RegistrationScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset="-147"
-    >
-      <View style={styles.form}>
-        <View style={styles.avaWrapper}>
-          <View style={styles.addBtn}>
-            <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+    <Layout>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset="-147"
+      >
+        <View style={styles.form}>
+          <View style={styles.avaWrapper}>
+            <View style={styles.addBtn}>
+              <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+            </View>
           </View>
-        </View>
-        <Text style={styles.title}>Регистрация</Text>
-        <TextInput
-          style={inputStyleLog}
-          placeholder="Логин"
-          placeholderTextColor="#BDBDBD"
-          value={login}
-          onChangeText={(text) => setLogin(text)}
-          onFocus={handleFocusLog}
-          onBlur={handleBlurLog}
-        />
-        <TextInput
-          style={inputStyleEmail}
-          placeholder="Адрес электронной почты"
-          placeholderTextColor="#BDBDBD"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          onFocus={handleFocusEmail}
-          onBlur={handleBlurEmail}
-        />
-        <View style={inputStyleEPass}>
+          <Text style={styles.title}>Регистрация</Text>
           <TextInput
-            style={styles.passText}
-            placeholder="Пароль"
+            style={inputStyleLog}
+            placeholder="Логин"
             placeholderTextColor="#BDBDBD"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            onFocus={handleFocusPass}
-            onBlur={handleBlurPass}
+            value={login}
+            onChangeText={(text) => setLogin(text)}
+            onFocus={handleFocusLog}
+            onBlur={handleBlurLog}
           />
+          <TextInput
+            style={inputStyleEmail}
+            placeholder="Адрес электронной почты"
+            placeholderTextColor="#BDBDBD"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            onFocus={handleFocusEmail}
+            onBlur={handleBlurEmail}
+          />
+          <View style={inputStyleEPass}>
+            <TextInput
+              style={styles.passText}
+              placeholder="Пароль"
+              placeholderTextColor="#BDBDBD"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              onFocus={handleFocusPass}
+              onBlur={handleBlurPass}
+            />
+            <TouchableOpacity
+              onPress={toggleShowPassword}
+              style={styles.passwordToggle}
+            >
+              <Text style={styles.show}>
+                {showPassword ? "Скрыть" : "Показать"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.btn} onPress={onSubmit}>
+            <Text style={styles.btnTitle}>Зарегистрироваться</Text>
+          </TouchableOpacity>
           <TouchableOpacity
-            onPress={toggleShowPassword}
-            style={styles.passwordToggle}
+            style={styles.link}
+            onPress={() => navigation.navigate("Login")}
           >
-            <Text style={styles.show}>
-              {showPassword ? "Скрыть" : "Показать"}
-            </Text>
+            <Text style={styles.linkText}>Уже есть аккаунт? Войти</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.btn} onPress={onSubmit}>
-          <Text style={styles.btnTitle}>Зарегистрироваться</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.link}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.linkText}>Уже есть аккаунт? Войти</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </Layout>
   );
 };
 
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // flex: 0.7,
+    // flex: 1,
     justifyContent: "center",
   },
   avaWrapper: {

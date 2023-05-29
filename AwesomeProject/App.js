@@ -18,6 +18,7 @@ import {
 
 import { PersistGate } from "redux-persist/integration/react";
 import persistor from "./src/redux/store";
+
 import { Main } from "./src/components/Main";
 
 const MainStack = createStackNavigator();
@@ -58,7 +59,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <Main/>
+      <Main />
       {/* <PersistGate loading={null} persistor={persistor}> */}
       {/* <NavigationContainer>{routing}</NavigationContainer> */}
       {/* </PersistGate> */}
