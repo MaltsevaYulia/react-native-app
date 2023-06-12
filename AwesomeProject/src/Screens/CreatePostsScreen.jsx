@@ -20,10 +20,7 @@ import { db, storage } from "../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import {
-  launchImageLibrary,
-} from "react-native-image-picker";
-  console.log("🚀 ~ launchImageLibrary:", launchImageLibrary);
+import * as ImagePicker from "expo-image-picker";
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -95,7 +92,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       const uploadPhoto = await uploadBytes(photoRef, file);
 
       const photoUri = await getDownloadURL(uploadPhoto.ref);
-      console.log("🚀 ~ uploadPhotoToServer ~ photoUri:", photoUri);
+      
       return photoUri;
     } catch (error) {
       console.log("🚀 ~ uploadPhotoToServer ~ error:", error);
@@ -103,18 +100,13 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   const choosePhoto = async () => {
-    console.log("🚀 ~ launchImageLibrary:", launchImageLibrary);
-    try {
-      const result = await launchImageLibrary({
-        mediaTypes: "photo",
-        // aspect: [3, 2],
-        quality: 1,
-      });
-      if (!result.canceled) {
-        setPhoto(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.log("🚀 ~ choosePhoto ~ error:", error);
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [3, 2],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
     }
   };
 
