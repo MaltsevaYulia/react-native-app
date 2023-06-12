@@ -15,6 +15,15 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
+import { db, storage } from "../firebase/config";
+
+import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+import {
+  launchImageLibrary,
+} from "react-native-image-picker";
+  console.log("🚀 ~ launchImageLibrary:", launchImageLibrary);
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -34,7 +43,6 @@ export const CreatePostsScreen = ({ navigation }) => {
     })();
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      // console.log("🚀 ~ status:", status)
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
@@ -49,12 +57,64 @@ export const CreatePostsScreen = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
+  const writeDataToFirestore = async () => {
+    const photo = await uploadPhotoToServer();
+
+    try {
+      const docRef = await addDoc(collection(db, "posts"), {
+        photo,
+        name,
+        region,
+        location: {
+          latitude: location?.coords.latitude || "",
+          longitude: location?.coords.longitude || "",
+        },
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      throw e;
+    }
+  };
+
   const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
       setPhoto(uri);
-      
+    }
+  };
+
+  const uploadPhotoToServer = async () => {
+    try {
+      const response = await fetch(photo);
+      const file = await response.blob();
+      const phototId = Date.now().toString();
+      const photoRef = ref(storage, phototId);
+
+      const uploadPhoto = await uploadBytes(photoRef, file);
+
+      const photoUri = await getDownloadURL(uploadPhoto.ref);
+      console.log("🚀 ~ uploadPhotoToServer ~ photoUri:", photoUri);
+      return photoUri;
+    } catch (error) {
+      console.log("🚀 ~ uploadPhotoToServer ~ error:", error);
+    }
+  };
+
+  const choosePhoto = async () => {
+    console.log("🚀 ~ launchImageLibrary:", launchImageLibrary);
+    try {
+      const result = await launchImageLibrary({
+        mediaTypes: "photo",
+        // aspect: [3, 2],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setPhoto(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log("🚀 ~ choosePhoto ~ error:", error);
     }
   };
 
@@ -65,14 +125,15 @@ export const CreatePostsScreen = ({ navigation }) => {
     //   latitude: location.coords.latitude,
     //   longitude: location.coords.longitude,
     // };
-    setLocation(location);
+    await setLocation(location);
+    writeDataToFirestore();
     navigation.navigate("DefaultPostsScreen", {
       photo,
       name,
       region,
       location,
     });
-    
+
     setName("");
     setRegion("");
     setPhoto("");
@@ -95,7 +156,10 @@ export const CreatePostsScreen = ({ navigation }) => {
             </TouchableOpacity>
           </Camera>
           {/* </View> */}
-          <Text style={styles.addPhoto}>Загрузите фото</Text>
+          <TouchableOpacity onPress={choosePhoto}>
+            <Text style={styles.addPhoto}>Загрузите фото</Text>
+          </TouchableOpacity>
+
           <View style={styles.photoInfo}>
             <TextInput
               style={styles.nameInpt}
@@ -147,6 +211,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 8,
+    overflow: "hidden",
   },
   picture: { width: "100%", height: "100%" },
   round: {

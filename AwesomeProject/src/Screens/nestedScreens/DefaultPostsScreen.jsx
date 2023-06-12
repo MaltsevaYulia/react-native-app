@@ -11,17 +11,30 @@ import { StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/selectors";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase/config";
 
 export const DefaultPostsScreen = ({ route, navigation }) => {
-  const [posts, setPosts] = useState([]);
- const user = useSelector(selectUser);
- console.log("🚀 ~ DefaultPostsScreen ~ user:", user)
+  const [posts, setPosts] = useState(() => getDataFromFirestore());
+  const user = useSelector(selectUser);
 
-  useEffect(() => {
-    if (route.params) {
-      setPosts((prev) => [...prev, route.params]);
+  async function getDataFromFirestore() {
+    try {
+      const snapShot = await getDocs(collection(db, "posts"));
+      const postsData = snapShot.docs.map((doc) => {
+        console.log("doc.data", doc.data());
+        return { ...doc.data(), id: doc.id };
+      });
+      setPosts(postsData)
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-  }, [route.params]);
+  };
+
+  // useEffect(() => {
+  //   getDataFromFirestore();
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -29,21 +42,18 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
         <View style={styles.userWrapp}>
           <Image source={require("../../assets/images/user.jpg")} />
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>{ user.name}</Text>
-            <Text style={styles.userEmail}>{ user.email}</Text>
+            <Text style={styles.userName}>{user.name}</Text>
+            <Text style={styles.userEmail}>{user.email}</Text>
           </View>
         </View>
-        <SafeAreaView>
+        <SafeAreaView style={styles.list}>
           <FlatList
             data={posts}
             keyExtractor={(item, indx) => indx.toString()}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <View style={styles.postContainer}>
                 <View style={styles.photoContainer}>
-                  <Image
-                    source={{ uri: item.photo }}
-                    style={styles.picture}
-                  />
+                  <Image source={{ uri: item.photo }} style={styles.picture} />
                 </View>
                 <Text style={styles.postName}>{item.name}</Text>
                 <View style={styles.postInfo}>
@@ -52,6 +62,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                       onPress={() =>
                         navigation.navigate("CommentsScreen", {
                           photo: item.photo,
+                          id:item.id
                         })
                       }
                     >
@@ -67,7 +78,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate("MapScreen", {
-                          location: item.location,
+                          location: {...item.location},
                         })
                       }
                     >
@@ -118,6 +129,7 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: "rgba(33, 33, 33, 0.8)",
   },
+  list: { flex:1},
   postContainer: {
     gap: 8,
     marginBottom: 34,

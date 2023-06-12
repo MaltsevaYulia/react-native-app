@@ -13,17 +13,13 @@ import { selectIsLoggedIn } from "../redux/auth/selectors";
 import { authStateChangeUser } from "../redux/auth/authOperetion";
 import { UserNav } from "./UserNav";
 import { AuthNav } from "./AuthNav";
-// import { connect } from "react-redux";
 
 
 export const Main = () => {
-  // const [uid, setUid] = useState("");
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  console.log("🚀 ~ Main ~ isLoggedIn:", isLoggedIn);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("🚀 ~ Main ~ isLoggedIn in useEffect:", isLoggedIn);
     dispatch(authStateChangeUser());
   }, []);
 
@@ -47,8 +43,7 @@ export const Main = () => {
       {isLoggedIn ? <UserNav /> : <AuthNav />}
     </NavigationContainer>
   );
-  // const routing = useRoute(isLoggedIn);
-  // return <NavigationContainer>{routing}</NavigationContainer>;
+  
 };
 
 

@@ -10,11 +10,12 @@ import {
   Platform,
 } from "react-native";
 import { selectUser } from "../redux/auth/selectors";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../redux/auth/authOperetion";
 
 export const ProfileScreen = () => {
   const user = useSelector(selectUser);
-  console.log("🚀 ~ ProfileScreen ~ user:", user)
+  const dispatch=useDispatch()
  
   return (
     <Layout>
@@ -29,13 +30,15 @@ export const ProfileScreen = () => {
             />
           </View>
         </View>
-        <Feather
-          style={styles.outIcon}
-          name="log-out"
-          size={24}
-          color="#BDBDBD"
-        />
-        <Text style={styles.title}>{ user.name}</Text>
+        <TouchableOpacity onPress={()=>dispatch(logOut())}>
+          <Feather
+            style={styles.outIcon}
+            name="log-out"
+            size={24}
+            color="#BDBDBD"
+          />
+        </TouchableOpacity>
+        <Text style={styles.title}>{user.name}</Text>
         <View>
           <Text style={styles.text}>Лес</Text>
           <View style={styles.postInfo}>

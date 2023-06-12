@@ -75,7 +75,7 @@ const dispatch = useDispatch();
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => {
-                  console.log("Это икопка logOut в routing");
+                  console.log("Это икопка logOut в UserNav");
                   dispatch(logOut());
                   // dispatch(authStateChangeUser());
                   // Do something
