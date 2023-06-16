@@ -9,38 +9,52 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/auth/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import { selectPosts, selectUser } from "../../redux/auth/selectors";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import { getPostsFromFirestore } from "../../helpers/getDataFromFirestore/getPostsFromFirestore";
+import { getPosts } from "../../redux/posts/postsOperations";
 
 export const DefaultPostsScreen = ({ route, navigation }) => {
-  const [posts, setPosts] = useState(() => getDataFromFirestore());
+  // const [posts, setPosts] = useState(null);
+  const posts = useSelector(selectPosts);
+  console.log("🚀 ~ DefaultPostsScreen ~ posts:", posts);
   const user = useSelector(selectUser);
+  console.log("🚀 ~ DefaultPostsScreen ~ user:", user);
+  const dispatch = useDispatch();
 
-  async function getDataFromFirestore() {
-    try {
-      const snapShot = await getDocs(collection(db, "posts"));
-      const postsData = snapShot.docs.map((doc) => {
-        console.log("doc.data", doc.data());
-        return { ...doc.data(), id: doc.id };
-      });
-      setPosts(postsData)
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
 
   // useEffect(() => {
+  //   async function getDataFromFirestore() {
+  //     try {
+  //       const snapShot = await getDocs(collection(db, "posts"));
+  //       const postsData = snapShot.docs.map((doc) => {
+  //         return { ...doc.data(), id: doc.id };
+  //       });
+  //       console.log("🚀 ~ postsData ~ postsData:", postsData);
+  //       setPosts(postsData);
+  //     } catch (error) {
+  //       console.log(error);
+  //       throw error;
+  //     }
+  //   }
   //   getDataFromFirestore();
+
   // }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.main}>
         <View style={styles.userWrapp}>
-          <Image source={require("../../assets/images/user.jpg")} />
+          {user.photoURL ? (
+            <Image source={{ uri: user.photoURL }} style={styles.avatar} />
+          ) : (
+            <View style={styles.noAvatar} />
+          )}
           <View style={styles.userInfo}>
             <Text style={styles.userName}>{user.name}</Text>
             <Text style={styles.userEmail}>{user.email}</Text>
@@ -62,7 +76,8 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                       onPress={() =>
                         navigation.navigate("CommentsScreen", {
                           photo: item.photo,
-                          id:item.id
+                          id: item.id,
+                          comments: item.comments,
                         })
                       }
                     >
@@ -72,13 +87,13 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                         color="#BDBDBD"
                       />
                     </TouchableOpacity>
-                    <Text>0</Text>
+                    <Text>{item.comments.length}</Text>
                   </View>
                   <View style={styles.regionWrap}>
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate("MapScreen", {
-                          location: {...item.location},
+                          location: { ...item.location },
                         })
                       }
                     >
@@ -111,6 +126,17 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 32,
   },
+  avatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+  },
+  noAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+  },
   userInfo: {
     // alignItems: 'center',
     justifyContent: "center",
@@ -129,7 +155,7 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: "rgba(33, 33, 33, 0.8)",
   },
-  list: { flex:1},
+  list: { flex: 1 },
   postContainer: {
     gap: 8,
     marginBottom: 34,

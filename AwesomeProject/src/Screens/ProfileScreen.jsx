@@ -8,29 +8,57 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
+import { useState } from "react";
 import { selectUser } from "../redux/auth/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../redux/auth/authOperetion";
+import {
+  logOut,
+  authStateChangeUser,
+  updateUserPhoto,
+} from "../redux/auth/authOperetion";
+import { choosePhotoFromGallery } from "../helpers/choosePhotoFromGallery";
+import { uploadPhotoToServer } from "../helpers/uploadPhotoToServer";
+
 
 export const ProfileScreen = () => {
   const user = useSelector(selectUser);
-  const dispatch=useDispatch()
- 
+  const { photoURL } = user;
+  console.log("🚀 ~ ProfileScreen ~ user:", user);
+  const dispatch = useDispatch();
+  // const [avatarUrl, setAvatarUrl] = useState('')
+  
+
+  const addAvatar =async () => {
+    const img = await choosePhotoFromGallery()
+    const uri = await uploadPhotoToServer(img);
+    await dispatch(updateUserPhoto(uri));
+    // setAvatarUrl(uri)
+    dispatch(authStateChangeUser());
+    
+  }
+
   return (
     <Layout>
       <View style={styles.container}>
         <View style={styles.avaWrapper}>
-          <View style={styles.addBtn}>
+          {user.photoURL  && (
+              <Image
+                source={{ uri: user.photoURL }}
+                style={styles.ava}
+              />
+            )}
+          <TouchableOpacity style={styles.addBtn} onPress={addAvatar}>
             <AntDesign
-              style={styles.delIcon}
+              style={[photoURL ? styles.delIcon : styles.addIcon]}
               name="pluscircleo"
               size={25}
-              color="#BDBDBD"
+              color={photoURL ? "#BDBDBD" : "#FF6C00"}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={()=>dispatch(logOut())}>
+        <TouchableOpacity onPress={() => dispatch(logOut())}>
           <Feather
             style={styles.outIcon}
             name="log-out"
@@ -96,18 +124,26 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -50 }, { translateY: -60 }],
   },
+  ava: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+    borderRadius: 16,
+  },
   addBtn: {
     position: "absolute",
     // borderColor: '#FF6C00',
-    // borderRadius: '50%',
+    borderRadius: "50%",
     // borderWidth: 1,
-    // backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     width: 25,
     height: 25,
     right: 0,
     bottom: 12,
     transform: [{ translateX: 12.5 }],
   },
+  addIcon: {},
   delIcon: {
     transform: [{ rotate: "-45deg" }],
   },

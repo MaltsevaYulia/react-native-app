@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   View,
@@ -7,37 +7,89 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
+  FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import {db} from "../../firebase/config"
+import { db } from "../../firebase/config";
 import { selectUser } from "../../redux/auth/selectors";
 import { useSelector } from "react-redux";
 import { collection, addDoc } from "firebase/firestore";
+import { async } from "@firebase/util";
+import { getCommentsFromFirestore } from "../../helpers/getDataFromFirestore/getCommentsFromFirestore";
+import { formatDateTime } from "../../helpers/formatDateTime";
 
 const CommentsScreen = ({ route }) => {
-  const { photo,id } = route.params; 
-  console.log("🚀 ~ CommentsScreen ~ id:", id)
-  const user=useSelector(selectUser)
+  const { photo, id, comments } = route.params;
+  console.log("🚀 ~ CommentsScreen ~ comments:", comments);
+  console.log("🚀 ~ CommentsScreen ~ id:", id);
+  const user = useSelector(selectUser);
+  console.log("🚀 ~ CommentsScreen ~ user:", user);
   const [comment, setComment] = useState("");
+  // const [comments, setComments] = useState("");
 
-  const sendComment =async () => {
-    
-    const commentsRef =await collection(
-      db,
-      "posts",
-      id,
-      "comments"
-    );
-    const commentsDocRef = await addDoc(commentsRef, {
-      comment,
-    });
-  }
+  const sendComment = async () => {
+    if (comment) {
+      const commentsRef = await collection(db, "posts", id, "comments");
+      const commentsDocRef = await addDoc(commentsRef, {
+        comment,
+        date: Date.now(),
+        avatar: user.photoURL || "",
+      });
+    }
+
+    setComment("");
+  };
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const comments = await getCommentsFromFirestore(id);
+  //     console.log("🚀 ~ useEffect ~ comments:", comments);
+  //     setComments(comments);
+  //   }
+  //   fetchData();
+  // }, []);
+
+  // const getComment =async () => {
+  //   const comments = await getCommentFromFirestore(id);
+
+  // }
 
   return (
     <View style={styles.container}>
       <View style={styles.postContainer}>
         <Image source={{ uri: photo }} style={styles.photo} />
       </View>
+      <SafeAreaView>
+        <FlatList
+          data={comments}
+          keyExtractor={(item) => item.date.toString()}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={[
+                  styles.commetWrapper,
+                  item.avatar === user.photoURL
+                    ? styles.currentUser
+                    : styles.guestUser,
+                ]}
+              >
+                {item.avatar ? (
+                  <Image source={{ uri: item.avatar }} style={styles.avatar} />
+                ) : (
+                  <View style={styles.avatar} />
+                )}
+                <View style={styles.commetText}>
+                  <Text style={styles.comment}>
+                    {item.comment}
+                  </Text>
+                  <Text style={styles.date}>{formatDateTime(item.date)}</Text>
+                </View>
+              </View>
+            );
+          }}
+        />
+      </SafeAreaView>
       <View style={styles.commentInput}>
         <TextInput
           style={styles.inputText}
@@ -56,7 +108,12 @@ const CommentsScreen = ({ route }) => {
 export default CommentsScreen;
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: 16 ,backgroundColor:'#ffffff'},
+  container: {
+    paddingHorizontal: 16,
+    backgroundColor: "#ffffff",
+    flex: 1,
+    justifyContent: "space-between",
+  },
   postContainer: {
     // backgroundColor: "#F6F6F6",
     // width: 343,
@@ -77,6 +134,42 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     borderRadius: 8,
   },
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 50,
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+  },
+
+  commetWrapper: {
+    gap: 16,
+    marginBottom: 24,
+    alignItems: "center",
+    // flexDirection: "row-reverse",
+  },
+  currentUser: { flexDirection: "row" },
+  guestUser: { flexDirection: "row-reverse" },
+  commetText: {
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    borderRadius: 6,
+    // width: "100%",
+    padding: 16,
+    gap: 8,
+  },
+  comment: {
+    fontFamily: "Roboto-Regular",
+    fontWeight: 400,
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#212121",
+  },
+  date: {
+    fontFamily: "Roboto-Regular",
+    fontWeight: 400,
+    fontSize: 10,
+    lineHeight: 12,
+    color: "#BDBDBD",
+  },
   commentInput: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -85,6 +178,7 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
     padding: 16,
+    marginBottom: 16,
   },
   inputText: {
     fontFamily: "Roboto-Regular",

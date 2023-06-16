@@ -19,8 +19,9 @@ import { db, storage } from "../firebase/config";
 
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { choosePhotoFromGallery } from "../helpers/choosePhotoFromGallery";
+import { uploadPhotoToServer } from "../helpers/uploadPhotoToServer";
 
-import * as ImagePicker from "expo-image-picker";
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -31,6 +32,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [region, setRegion] = useState("");
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+ 
 
   useEffect(() => {
     (async () => {
@@ -55,11 +57,11 @@ export const CreatePostsScreen = ({ navigation }) => {
   }
 
   const writeDataToFirestore = async () => {
-    const photo = await uploadPhotoToServer();
+    const photoUrl = await uploadPhotoToServer(photo);
 
     try {
       const docRef = await addDoc(collection(db, "posts"), {
-        photo,
+        photo:photoUrl,
         name,
         region,
         location: {
@@ -82,32 +84,27 @@ export const CreatePostsScreen = ({ navigation }) => {
     }
   };
 
-  const uploadPhotoToServer = async () => {
-    try {
-      const response = await fetch(photo);
-      const file = await response.blob();
-      const phototId = Date.now().toString();
-      const photoRef = ref(storage, phototId);
+  // const uploadPhotoToServer = async () => {
+  //   try {
+  //     const response = await fetch(photo);
+  //     const file = await response.blob();
+  //     const phototId = Date.now().toString();
+  //     const photoRef = ref(storage, phototId);
 
-      const uploadPhoto = await uploadBytes(photoRef, file);
+  //     const uploadPhoto = await uploadBytes(photoRef, file);
 
-      const photoUri = await getDownloadURL(uploadPhoto.ref);
+  //     const photoUri = await getDownloadURL(uploadPhoto.ref);
       
-      return photoUri;
-    } catch (error) {
-      console.log("🚀 ~ uploadPhotoToServer ~ error:", error);
-    }
-  };
+  //     return photoUri;
+  //   } catch (error) {
+  //     console.log("🚀 ~ uploadPhotoToServer ~ error:", error);
+  //   }
+  // };
 
   const choosePhoto = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [3, 2],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
-    }
+    const uri = await choosePhotoFromGallery()
+    console.log("🚀 ~ choosePhoto ~ uri:", uri)
+    setPhoto(uri)
   };
 
   const publish = async () => {
@@ -118,7 +115,7 @@ export const CreatePostsScreen = ({ navigation }) => {
     //   longitude: location.coords.longitude,
     // };
     await setLocation(location);
-    writeDataToFirestore();
+    await writeDataToFirestore();
     navigation.navigate("DefaultPostsScreen", {
       photo,
       name,
@@ -136,17 +133,20 @@ export const CreatePostsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.main}>
           {/* <View style={styles.photo}> */}
-          <Camera style={styles.photo} type={type} ref={setCameraRef}>
-            {photo && <Image source={{ uri: photo }} style={styles.picture} />}
-            <TouchableOpacity style={styles.round} onPress={takePhoto}>
-              <MaterialIcons
-                style={styles.camera}
-                name="photo-camera"
-                size={24}
-                color="black"
-              />
-            </TouchableOpacity>
-          </Camera>
+          {photo ? (
+            <Image source={{ uri: photo }} style={styles.photo} />
+          ) : (
+            <Camera style={styles.photo} type={type} ref={setCameraRef}>
+              <TouchableOpacity style={styles.round} onPress={takePhoto}>
+                <MaterialIcons
+                  style={styles.camera}
+                  name="photo-camera"
+                  size={24}
+                  color="black"
+                />
+              </TouchableOpacity>
+            </Camera>
+          )}
           {/* </View> */}
           <TouchableOpacity onPress={choosePhoto}>
             <Text style={styles.addPhoto}>Загрузите фото</Text>
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     overflow: "hidden",
   },
-  picture: { width: "100%", height: "100%" },
+  // picture: { width: "100%", height: "100%" },
   round: {
     position: "absolute",
     alignItems: "center",

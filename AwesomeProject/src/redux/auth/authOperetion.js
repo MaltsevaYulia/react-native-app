@@ -9,26 +9,24 @@ import {
 import { useDispatch } from "react-redux";
 import { auth } from "../../firebase/config";
 
-
-
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ email, password, login }, thunkAPI) => {
+  async ({ email, password, login, photo }, thunkAPI) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password, photo);
 
       const user = await auth.currentUser;
-      
+      console.log("🚀 ~ in register operetion user:", user);
+
       // await user.updateProfile(user:currentUser)
       await updateProfile(user, {
         displayName: login,
+        photoURL: photo,
       });
 
-      
-      const { displayName, uid } = await auth.currentUser;
-      console.log("🚀 ~ displayName:", displayName)
+      const { displayName, uid, photoURL } = await auth.currentUser;
 
-      return { email: user.email, uid, name: displayName };
+      return { email: user.email, uid, name: displayName, photoURL };
     } catch (error) {
       console.log("🚀 ~ error:", error);
       return thunkAPI.rejectWithValue(error.message);
@@ -45,13 +43,11 @@ export const logIn = createAsyncThunk(
         email,
         password
       );
-      
+
       if (credentials.user) {
-         const { uid, email, displayName } = credentials.user;
-      return { uid, email, name: displayName };
-      
-      } 
-     
+        const { uid, email, displayName, photoURL } = credentials.user;
+        return { uid, email, name: displayName, photoURL };
+      }
     } catch (error) {
       console.log("🚀 ~ error:", error);
       return thunkAPI.rejectWithValue(error.message);
@@ -68,14 +64,18 @@ export const logOut = createAsyncThunk("auth/logOut", async (_, thunkAPI) => {
   }
 });
 
-export const updateUserProfile = createAsyncThunk(
-  "auth/updateUser",
-  async (userData, thunkAPI) => {
+export const updateUserPhoto = createAsyncThunk(
+  "auth/updateUserPhoto",
+  async ({uri}, thunkAPI) => {
     const user = auth.currentUser;
     if (user) {
-      console.log("🚀 ~ user:", user);
       try {
-        await updateProfile(user, userData);
+        await updateProfile(user, {
+          photoURL: uri,
+        });
+        const { displayName, uid, photoURL } = await auth.currentUser;
+
+        return { email: user.email, uid, name: displayName, photoURL };
       } catch (error) {
         console.log("🚀 ~ error:", error);
         return thunkAPI.rejectWithValue(error.message);
@@ -84,33 +84,41 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
-
 export const authStateChangeUser = createAsyncThunk(
   "auth/authStateChange",
   async (_, thunkAPI) => {
-    const dispatch = useDispatch();
     try {
-      await onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // console.log("🚀 ~ onAuthStateChanged ~ user:", user)
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/auth.user
-          const { uid, email, displayName } = user;
-          return { uid, email, name: displayName };
-          // ...
-        } else {
-          // User is signed out
-          // ...
-          console.log(
-            "Это authStateChangeUser вызываю dispatch(logOut())"
-          );
-          dispatch(logOut())
-          return null
-        }
+      const user = await new Promise((resolve, reject) => {
+        onAuthStateChanged(
+          auth,
+          (user) => {
+            if (user) {
+              console.log("🚀 ~ onAuthStateChanged ~ user:", user);
+              const { uid, email, displayName, photoURL } = user;
+              resolve({ uid, email, displayName, photoURL });
+            } else {
+              resolve(null);
+            }
+          },
+          reject
+        );
       });
+
+      return user;
+      // await onAuthStateChanged(auth, (user) => {
+      //     if (user) {
+      //       console.log("🚀 ~ onAuthStateChanged ~ user:", user)
+      //       // User is signed in, see docs for a list of available properties
+      //       // https://firebase.google.com/docs/reference/js/auth.user
+      //       const { uid, email, displayName, photoURL } = user;
+      //       return { uid, email, name: displayName, photoURL };
+      //     } else {
+      //       return null
+      //     }
+      // });
     } catch (error) {
-      console.log("🚀 ~ error:", error)
-      return thunkAPI.rejectWithValue(error.message)
+      console.log("🚀 ~ error.message:", error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
-)
+);

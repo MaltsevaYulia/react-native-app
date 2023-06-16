@@ -3,7 +3,7 @@ import {
   register,
   logIn,
   logOut,
-  updateUserProfile,
+  updateUserPhoto,
   authStateChangeUser,
 } from "./authOperetion";
 
@@ -25,39 +25,41 @@ export const authSlice = createSlice({
     builder
       .addCase(register.pending, (state) => state)
       .addCase(register.fulfilled, (state, action) => {
+        console.log("🚀 ~ .addCase ~ action.payload:", action.payload);
         state.user = action.payload;
         state.isLoggedIn = true;
       })
       .addCase(register.rejected, (state) => state)
       .addCase(logIn.pending, (state) => state)
       .addCase(logIn.fulfilled, (state, action) => {
-           state.user = action.payload;
-           state.isLoggedIn = true;
-         
+        state.user = action.payload;
+        state.isLoggedIn = true;
       })
-      .addCase(logIn.rejected, (state) =>  state
-      )
+      .addCase(logIn.rejected, (state) => state)
       .addCase(logOut.pending, (state) => state)
       .addCase(logOut.fulfilled, (state, action) => {
-        return state = initialState;
+        return (state = initialState);
       })
       .addCase(logOut.rejected, (state) => state)
       .addCase(authStateChangeUser.pending, (state) => state)
       .addCase(authStateChangeUser.fulfilled, (state, action) => {
-        console.log(
-          "action.payload authStateChangeUser.fulfilled",
-          action.payload
-        );
+        state.user = action.payload;
+        state.isLoggedIn = true;
 
-        if (!action.payload) {
-          console.log("authStateChangeUser юзер не пришел");
-          state.isLoggedIn = false;
-        } else {
-          state.user = action.payload;
-          state.isLoggedIn = true;
-        }
+        console.log("🚀 ~ .addCase ~ action.payload:", action.payload);
+        // if (!action.payload) {
+        //   console.log("authStateChangeUser юзер не пришел");
+        //   state.isLoggedIn = false;
+        // } else {
+        //   state.user = action.payload;
+        //   state.isLoggedIn = true;
+        // }
       })
-      .addCase(authStateChangeUser.rejected, (state) => state);
+      .addCase(authStateChangeUser.rejected, (state) => state)
+      .addCase(updateUserPhoto.fulfilled, (state,action) => {
+        console.log("🚀 ~ .addCase ~ action.payload:", action.payload);
+        
+      });
   },
 });
 

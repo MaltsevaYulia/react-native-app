@@ -90,21 +90,21 @@ const dispatch = useDispatch();
         <MaineTab.Screen
           name="CreatePostsScreen"
           component={CreatePostsScreen}
-          options={{
+          options={({navigation})=>({
             tabBarStyle: { display: "none" },
             title: "Создать публикацию",
             headerTitleStyle: styles.headerTitle,
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => {
-                  // Do something
+                   navigation.navigate("PostsScreen");
                 }}
                 style={{ paddingLeft: 16 }}
               >
                 <Feather name="arrow-left" size={24} color="#BDBDBD" />
               </TouchableOpacity>
             ),
-          }}
+          })}
         />
         <MaineTab.Screen
           name="ProfileScreen"

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -13,11 +14,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { register } from "../redux/auth/authOperetion";
 import { Layout } from "../components/Layout";
+import { choosePhotoFromGallery } from "../helpers/choosePhotoFromGallery";
+import { uploadPhotoToServer } from "../helpers/uploadPhotoToServer";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [photo, setPhoto] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isFocusedLog, setIsFocusedLog] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -54,8 +58,15 @@ export const RegistrationScreen = () => {
   };
 
   const onSubmit = () => {
-    dispatch(register({ email, password ,login}));
-    
+    dispatch(register({ email, password, login, photo }));
+  };
+
+  const choosePhoto = async () => {
+    const img = await choosePhotoFromGallery();
+    const uri = await uploadPhotoToServer(img);
+    console.log("🚀 ~ choosePhoto ~ uri:", uri);
+
+    setPhoto(uri);
   };
 
   return (
@@ -66,9 +77,17 @@ export const RegistrationScreen = () => {
       >
         <View style={styles.form}>
           <View style={styles.avaWrapper}>
-            <View style={styles.addBtn}>
-              <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-            </View>
+            {photo && <Image source={{ uri: photo }} style={styles.ava} />}
+            <TouchableOpacity
+              style={[ photo ? styles.isAva : styles.addBtn]}
+              onPress={choosePhoto}
+            >
+              <AntDesign
+                name="pluscircleo"
+                size={25}
+                color={photo ? "#BDBDBD" : "#FF6C00"}
+              />
+            </TouchableOpacity>
           </View>
           <Text style={styles.title}>Регистрация</Text>
           <TextInput
@@ -143,17 +162,36 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -60 }, { translateY: -60 }],
   },
+  ava: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+    borderRadius: 16,
+  },
   addBtn: {
     position: "absolute",
     // borderColor: '#FF6C00',
-    // borderRadius: '50%',
+    borderRadius: "50%",
     // borderWidth: 1,
-    // backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     width: 25,
     height: 25,
     right: 0,
     bottom: 12,
     transform: [{ translateX: 12.5 }],
+  },
+  isAva: {
+    position: "absolute",
+    // borderColor: '#FF6C00',
+    borderRadius: "50%",
+    // borderWidth: 1,
+    backgroundColor: "#FFFFFF",
+    width: 25,
+    height: 25,
+    right: 0,
+    bottom: 9,
+    transform: [{ rotate: "-45deg" }, { translateX: 12.5 }],
   },
   title: {
     fontFamily: "Roboto-Medium",
