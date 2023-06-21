@@ -57,7 +57,7 @@ export const authSlice = createSlice({
       })
       .addCase(authStateChangeUser.rejected, (state) => state)
       .addCase(updateUserPhoto.fulfilled, (state,action) => {
-        console.log("🚀 ~ .addCase ~ action.payload:", action.payload);
+         state.user = action.payload;
         
       });
   },

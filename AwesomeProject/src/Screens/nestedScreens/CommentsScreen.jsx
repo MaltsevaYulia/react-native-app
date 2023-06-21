@@ -12,21 +12,27 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { db } from "../../firebase/config";
-import { selectUser } from "../../redux/auth/selectors";
-import { useSelector } from "react-redux";
+import { selectComments, selectUser } from "../../redux/selectors";
+import { useDispatch, useSelector } from "react-redux";
 import { collection, addDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import { getCommentsFromFirestore } from "../../helpers/getDataFromFirestore/getCommentsFromFirestore";
 import { formatDateTime } from "../../helpers/formatDateTime";
+import { getComments, getPosts } from "../../redux/posts/postsOperations";
 
 const CommentsScreen = ({ route }) => {
-  const { photo, id, comments } = route.params;
-  console.log("🚀 ~ CommentsScreen ~ comments:", comments);
-  console.log("🚀 ~ CommentsScreen ~ id:", id);
+  const { photo, id, commentsT } = route.params;
+  const comments = useSelector(selectComments);
   const user = useSelector(selectUser);
-  console.log("🚀 ~ CommentsScreen ~ user:", user);
   const [comment, setComment] = useState("");
-  // const [comments, setComments] = useState("");
+  // const [comments, setComments] = useState([]);
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const comments= posts.find((item) => item.id === id).comments;
+  //   console.log("🚀 ~ CommentsScreen ~ comments:", comments);
+  //   setComments(comments);
+  // }, [posts]);
 
   const sendComment = async () => {
     if (comment) {
@@ -36,19 +42,21 @@ const CommentsScreen = ({ route }) => {
         date: Date.now(),
         avatar: user.photoURL || "",
       });
+      dispatch(getComments(id));
     }
 
     setComment("");
   };
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const comments = await getCommentsFromFirestore(id);
-  //     console.log("🚀 ~ useEffect ~ comments:", comments);
-  //     setComments(comments);
-  //   }
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    // async function fetchData() {
+    //   const comments = await getCommentsFromFirestore(id);
+    //   console.log("🚀 ~ useEffect ~ comments:", comments);
+    //   setComments(comments);
+    // }
+    // fetchData();
+    dispatch(getComments(id));
+  }, []);
 
   // const getComment =async () => {
   //   const comments = await getCommentFromFirestore(id);
@@ -80,9 +88,7 @@ const CommentsScreen = ({ route }) => {
                   <View style={styles.avatar} />
                 )}
                 <View style={styles.commetText}>
-                  <Text style={styles.comment}>
-                    {item.comment}
-                  </Text>
+                  <Text style={styles.comment}>{item.comment}</Text>
                   <Text style={styles.date}>{formatDateTime(item.date)}</Text>
                 </View>
               </View>

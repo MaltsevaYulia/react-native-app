@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase/config";
-import { selectIsLoggedIn } from "../redux/auth/selectors";
+import { selectIsLoggedIn } from "../redux/selectors";
 import { authStateChangeUser } from "../redux/auth/authOperetion";
 import { UserNav } from "./UserNav";
 import { AuthNav } from "./AuthNav";

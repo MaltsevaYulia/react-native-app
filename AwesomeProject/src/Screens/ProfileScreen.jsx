@@ -10,45 +10,35 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { useState } from "react";
-import { selectUser } from "../redux/auth/selectors";
+import { selectPosts, selectUser } from "../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import {
   logOut,
-  authStateChangeUser,
   updateUserPhoto,
 } from "../redux/auth/authOperetion";
 import { choosePhotoFromGallery } from "../helpers/choosePhotoFromGallery";
 import { uploadPhotoToServer } from "../helpers/uploadPhotoToServer";
+import { PostsList } from "../components/PostsList";
 
-
-export const ProfileScreen = () => {
+export const ProfileScreen = ({ navigation }) => {
   const user = useSelector(selectUser);
   const { photoURL } = user;
-  console.log("🚀 ~ ProfileScreen ~ user:", user);
+  const posts = useSelector(selectPosts);
   const dispatch = useDispatch();
-  // const [avatarUrl, setAvatarUrl] = useState('')
-  
 
-  const addAvatar =async () => {
-    const img = await choosePhotoFromGallery()
+  const addAvatar = async () => {
+    const img = await choosePhotoFromGallery();
     const uri = await uploadPhotoToServer(img);
     await dispatch(updateUserPhoto(uri));
-    // setAvatarUrl(uri)
-    dispatch(authStateChangeUser());
-    
-  }
+  };
 
   return (
     <Layout>
       <View style={styles.container}>
         <View style={styles.avaWrapper}>
-          {user.photoURL  && (
-              <Image
-                source={{ uri: user.photoURL }}
-                style={styles.ava}
-              />
-            )}
+          {user.photoURL && (
+            <Image source={{ uri: user.photoURL }} style={styles.ava} />
+          )}
           <TouchableOpacity style={styles.addBtn} onPress={addAvatar}>
             <AntDesign
               style={[photoURL ? styles.delIcon : styles.addIcon]}
@@ -67,31 +57,7 @@ export const ProfileScreen = () => {
           />
         </TouchableOpacity>
         <Text style={styles.title}>{user.name}</Text>
-        <View>
-          <Text style={styles.text}>Лес</Text>
-          <View style={styles.postInfo}>
-            <View style={styles.likesWrapp}>
-              <Feather
-                style={styles.circleIcon}
-                name="message-circle"
-                size={24}
-                color="#FF6C00"
-              />
-              <Text style={styles.numb}>8</Text>
-              <Feather
-                style={styles.likeIcon}
-                name="thumbs-up"
-                size={24}
-                color="#FF6C00"
-              />
-              <Text>57</Text>
-            </View>
-            <View style={styles.locWrapp}>
-              <Feather name="map-pin" size={24} color="#BDBDBD" />
-              <Text>Ukraine</Text>
-            </View>
-          </View>
-        </View>
+        <PostsList posts={posts} navigation={navigation} />
       </View>
       {/* <View style={styles.footer}>
         <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
@@ -161,32 +127,6 @@ const styles = StyleSheet.create({
     marginTop: 92,
     marginBottom: 32,
     textAlign: "center",
-  },
-  text: {
-    marginBottom: 8,
-  },
-  postInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  likesWrapp: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  circleIcon: {
-    marginRight: 4,
-  },
-  numb: {
-    marginRight: 24,
-  },
-  likeIcon: {
-    marginRight: 4,
-  },
-  locWrapp: {
-    flexDirection: "row",
-    gap: 4,
-    alignItems: "center",
   },
   footer: {
     // height: 83,

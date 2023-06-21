@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getPostsFromFirestore } from "../../helpers/getDataFromFirestore/getPostsFromFirestore";
 import { db } from "../../firebase/config";
 import { collection, getDocs } from "firebase/firestore";
+import { getCommentsFromFirestore } from "../../helpers/getDataFromFirestore/getCommentsFromFirestore";
 
 export const getPosts = createAsyncThunk(
   "posts/getAll",
@@ -28,7 +29,19 @@ export const getPosts = createAsyncThunk(
       //   return postsData;
     } catch (error) {
       console.log(error);
-      throw error;
+     return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getComments = createAsyncThunk(
+  "posts/getComments",
+  async (id, thunkAPI) => {
+    try {
+    return await  getCommentsFromFirestore(id);
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

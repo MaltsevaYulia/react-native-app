@@ -1,8 +1,9 @@
 import { createSlice, combineReducers } from "@reduxjs/toolkit";
-import { getPosts } from "./postsOperations";
+import { getPosts, getComments } from "./postsOperations";
 
 const initialState = {
-  posts:[]
+  posts: [],
+  comments:[]
 };
 
 export const postsSlice = createSlice({
@@ -12,9 +13,14 @@ export const postsSlice = createSlice({
     builder
       .addCase(getPosts.pending, (state) => state)
       .addCase(getPosts.fulfilled, (state, action) => {
-      state.posts = action.payload;
+        state.posts = action.payload;
       })
-      .addCase(getPosts.rejected, (state) => state);
+      .addCase(getPosts.rejected, (state) => state)
+      .addCase(getComments.pending, (state) => state)
+      .addCase(getComments.fulfilled, (state, action) => {
+        state.comments = action.payload;
+      })
+      .addCase(getComments.rejected, (state) => state);
   },
 });
 

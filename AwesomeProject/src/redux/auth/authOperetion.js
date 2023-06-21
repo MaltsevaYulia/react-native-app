@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
@@ -6,7 +5,6 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
-import { useDispatch } from "react-redux";
 import { auth } from "../../firebase/config";
 
 export const register = createAsyncThunk(
@@ -14,11 +12,7 @@ export const register = createAsyncThunk(
   async ({ email, password, login, photo }, thunkAPI) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password, photo);
-
       const user = await auth.currentUser;
-      console.log("🚀 ~ in register operetion user:", user);
-
-      // await user.updateProfile(user:currentUser)
       await updateProfile(user, {
         displayName: login,
         photoURL: photo,
@@ -66,8 +60,8 @@ export const logOut = createAsyncThunk("auth/logOut", async (_, thunkAPI) => {
 
 export const updateUserPhoto = createAsyncThunk(
   "auth/updateUserPhoto",
-  async ({uri}, thunkAPI) => {
-    const user = auth.currentUser;
+  async (uri, thunkAPI) => {
+    const user =await auth.currentUser;
     if (user) {
       try {
         await updateProfile(user, {
@@ -93,7 +87,6 @@ export const authStateChangeUser = createAsyncThunk(
           auth,
           (user) => {
             if (user) {
-              console.log("🚀 ~ onAuthStateChanged ~ user:", user);
               const { uid, email, displayName, photoURL } = user;
               resolve({ uid, email, displayName, photoURL });
             } else {
