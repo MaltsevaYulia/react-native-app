@@ -17,7 +17,6 @@ import MapScreen from "./nestedScreens/MapScreen";
 const NestedScreens=createStackNavigator()
 
 export const PostsScreen = ({ route, navigation }) => {
-  
   return (
     <NestedScreens.Navigator>
       <NestedScreens.Screen
@@ -37,7 +36,6 @@ export const PostsScreen = ({ route, navigation }) => {
       />
     </NestedScreens.Navigator>
   );
-  
 };
 
 const styles = StyleSheet.create({

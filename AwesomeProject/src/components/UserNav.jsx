@@ -10,9 +10,9 @@ import { ProfileScreen } from "../Screens/ProfileScreen";
 const MaineTab = createBottomTabNavigator();
 
 export const UserNav = () => {
-const dispatch = useDispatch();
-
-    return (
+  const dispatch = useDispatch();
+  
+     return (
       <MaineTab.Navigator
         screenOptions={({ route }) => ({
           tabBarButton: ({
@@ -90,14 +90,14 @@ const dispatch = useDispatch();
         <MaineTab.Screen
           name="CreatePostsScreen"
           component={CreatePostsScreen}
-          options={({navigation})=>({
+          options={({ navigation }) => ({
             tabBarStyle: { display: "none" },
             title: "Создать публикацию",
             headerTitleStyle: styles.headerTitle,
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => {
-                   navigation.navigate("PostsScreen");
+                  navigation.navigate("PostsScreen");
                 }}
                 style={{ paddingLeft: 16 }}
               >

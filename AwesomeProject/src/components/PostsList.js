@@ -8,9 +8,16 @@ import {
   StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-
+import { useDispatch } from "react-redux";
+import { addLikes } from "../redux/posts/postsOperations";
 
 export const PostsList = ({ posts, navigation }) => {
+  const dispatch = useDispatch();
+
+  const addLike = (id, likes) => {
+    const newLikes = likes + 1;
+    dispatch(addLikes({ id, newLikes }));
+  };
   return (
     <SafeAreaView style={styles.list}>
       <FlatList
@@ -43,15 +50,17 @@ export const PostsList = ({ posts, navigation }) => {
                   <Text>{item.comments.length}</Text>
                 </View>
                 <View style={styles.comentsWrapp}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => addLike(item.id, item.likes)}
+                  >
                     <Feather
                       style={styles.likeIcon}
                       name="thumbs-up"
                       size={24}
-                      color="#FF6C00"
+                      color={item.likes === 0 ? "#BDBDBD" : "#FF6C00"}
                     />
                   </TouchableOpacity>
-                  <Text>57</Text>
+                  <Text>{item.likes}</Text>
                 </View>
               </View>
               <View style={styles.regionWrap}>

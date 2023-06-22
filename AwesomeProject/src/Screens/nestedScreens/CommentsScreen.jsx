@@ -18,11 +18,15 @@ import { collection, addDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import { getCommentsFromFirestore } from "../../helpers/getDataFromFirestore/getCommentsFromFirestore";
 import { formatDateTime } from "../../helpers/formatDateTime";
-import { getComments, getPosts } from "../../redux/posts/postsOperations";
+import {
+  addComment,
+  getComments,
+  getPosts,
+} from "../../redux/posts/postsOperations";
 
 const CommentsScreen = ({ route }) => {
-  const { photo, id, commentsT } = route.params;
-  const comments = useSelector(selectComments);
+  const { photo, id, comments } = route.params;
+  // const comments = useSelector(selectComments);
   const user = useSelector(selectUser);
   const [comment, setComment] = useState("");
   // const [comments, setComments] = useState([]);
@@ -36,13 +40,19 @@ const CommentsScreen = ({ route }) => {
 
   const sendComment = async () => {
     if (comment) {
-      const commentsRef = await collection(db, "posts", id, "comments");
-      const commentsDocRef = await addDoc(commentsRef, {
+      const newComment = {
         comment,
         date: Date.now(),
         avatar: user.photoURL || "",
-      });
-      dispatch(getComments(id));
+      };
+      dispatch(addComment({ id, newComment }));
+      // const commentsRef = await collection(db, "posts", id, "comments");
+      // const commentsDocRef = await addDoc(commentsRef, {
+      //   comment,
+      //   date: Date.now(),
+      //   avatar: user.photoURL || "",
+      // });
+      // dispatch(getComments(id));
     }
 
     setComment("");

@@ -21,6 +21,8 @@ import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { choosePhotoFromGallery } from "../helpers/choosePhotoFromGallery";
 import { uploadPhotoToServer } from "../helpers/uploadPhotoToServer";
+import { useDispatch } from "react-redux";
+import { addPost } from "../redux/posts/postsOperations";
 
 
 export const CreatePostsScreen = ({ navigation }) => {
@@ -32,7 +34,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [region, setRegion] = useState("");
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
- 
+ const dispatch=useDispatch()
 
   useEffect(() => {
     (async () => {
@@ -56,25 +58,26 @@ export const CreatePostsScreen = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
-  const writeDataToFirestore = async () => {
-    const photoUrl = await uploadPhotoToServer(photo);
+  // const writeDataToFirestore = async () => {
+  //   const photoUrl = await uploadPhotoToServer(photo);
 
-    try {
-      const docRef = await addDoc(collection(db, "posts"), {
-        photo:photoUrl,
-        name,
-        region,
-        location: {
-          latitude: location?.coords.latitude || "",
-          longitude: location?.coords.longitude || "",
-        },
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      throw e;
-    }
-  };
+  //   try {
+  //     const docRef = await addDoc(collection(db, "posts"), {
+  //       photo:photoUrl,
+  //       name,
+  //       region,
+  //       likes:0,
+  //       location: {
+  //         latitude: location?.coords.latitude || "",
+  //         longitude: location?.coords.longitude || "",
+  //       },
+  //     });
+  //     console.log("Document written with ID: ", docRef.id);
+  //   } catch (e) {
+  //     console.error("Error adding document: ", e);
+  //     throw e;
+  //   }
+  // };
 
   const takePhoto = async () => {
     if (cameraRef) {
@@ -85,23 +88,6 @@ export const CreatePostsScreen = ({ navigation }) => {
     }
   };
 
-  // const uploadPhotoToServer = async () => {
-  //   try {
-  //     const response = await fetch(photo);
-  //     const file = await response.blob();
-  //     const phototId = Date.now().toString();
-  //     const photoRef = ref(storage, phototId);
-
-  //     const uploadPhoto = await uploadBytes(photoRef, file);
-
-  //     const photoUri = await getDownloadURL(uploadPhoto.ref);
-      
-  //     return photoUri;
-  //   } catch (error) {
-  //     console.log("🚀 ~ uploadPhotoToServer ~ error:", error);
-  //   }
-  // };
-
   const choosePhoto = async () => {
     const uri = await choosePhotoFromGallery()
     console.log("🚀 ~ choosePhoto ~ uri:", uri)
@@ -110,13 +96,30 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const publish = async () => {
     let location = await Location.getCurrentPositionAsync({});
-    // console.log("🚀 ~ publish ~ location:", location);
+    console.log("🚀 ~ publish ~ location:", location);
     // const coords = {
     //   latitude: location.coords.latitude,
     //   longitude: location.coords.longitude,
     // };
     await setLocation(location);
-    await writeDataToFirestore();
+    const photoUrl = await uploadPhotoToServer(photo);
+    dispatch(
+      addPost({
+        photo: photoUrl,
+        name,
+        region,
+        likes: 0,
+        comments:[],
+        location: {
+          latitude: location?.coords.latitude || "",
+          longitude: location?.coords.longitude || "",
+        },
+      })
+    );
+    // await writeDataToFirestore();
+    setName("");
+    setRegion("");
+    setPhoto("");
     navigation.navigate("DefaultPostsScreen", {
       photo,
       name,
@@ -124,9 +127,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       location,
     });
 
-    setName("");
-    setRegion("");
-    setPhoto("");
+    
   };
 
   return (

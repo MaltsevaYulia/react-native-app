@@ -27,7 +27,7 @@ const firebaseConfig = {
   // messagingSenderId: "592551197341",
   // appId: "1:592551197341:web:e68540fc47320e19fe7274",
   // measurementId: "G-8S9Q55DQG1",
-  
+
   //test-project
   apiKey: "AIzaSyDlz8TDh709nOLVWVsvwpULRFMYSPOV3hk",
   authDomain: "test-project-4eeb2.firebaseapp.com",
@@ -35,6 +35,14 @@ const firebaseConfig = {
   storageBucket: "test-project-4eeb2.appspot.com",
   messagingSenderId: "465096554982",
   appId: "1:465096554982:web:9aee6c4e3bf1cb53447e27",
+
+  //Awesome
+  // apiKey: "AIzaSyBI880LKY5TZpUoExqURX-GtzIDZa7fdfA",
+  // authDomain: "awesome-6fa2d.firebaseapp.com",
+  // projectId: "awesome-6fa2d",
+  // storageBucket: "awesome-6fa2d.appspot.com",
+  // messagingSenderId: "204044581768",
+  // appId: "1:204044581768:web:908145efff24ad467a583d",
 };
 const app = initializeApp(firebaseConfig);
 

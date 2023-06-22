@@ -1,49 +1,19 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  SafeAreaView,
-} from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, Text, Image } from "react-native";
 import { StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPosts, selectUser, selectComments } from "../../redux/selectors";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase/config";
-import { getPostsFromFirestore } from "../../helpers/getDataFromFirestore/getPostsFromFirestore";
 import { getPosts } from "../../redux/posts/postsOperations";
 import { PostsList } from "../../components/PostsList";
 
 export const DefaultPostsScreen = ({ route, navigation }) => {
   const posts = useSelector(selectPosts);
-  const comments = useSelector(selectComments);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch, comments]);
-
-  // useEffect(() => {
-  //   async function getDataFromFirestore() {
-  //     try {
-  //       const snapShot = await getDocs(collection(db, "posts"));
-  //       const postsData = snapShot.docs.map((doc) => {
-  //         return { ...doc.data(), id: doc.id };
-  //       });
-  //       console.log("🚀 ~ postsData ~ postsData:", postsData);
-  //       setPosts(postsData);
-  //     } catch (error) {
-  //       console.log(error);
-  //       throw error;
-  //     }
-  //   }
-  //   getDataFromFirestore();
-
-  // }, []);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -92,7 +62,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
   },
   userInfo: {
-    // alignItems: 'center',
     justifyContent: "center",
   },
   userName: {

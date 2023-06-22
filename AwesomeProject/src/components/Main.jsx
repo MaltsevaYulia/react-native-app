@@ -23,6 +23,7 @@ export const Main = () => {
     dispatch(authStateChangeUser());
   }, []);
 
+
   // onAuthStateChanged(auth, (user) => {
   //   if (user) {
   //     // console.log("🚀 ~ onAuthStateChanged ~ user:", user)
