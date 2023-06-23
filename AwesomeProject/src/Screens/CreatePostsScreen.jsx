@@ -15,10 +15,6 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
-import { db, storage } from "../firebase/config";
-
-import { collection, addDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { choosePhotoFromGallery } from "../helpers/choosePhotoFromGallery";
 import { uploadPhotoToServer } from "../helpers/uploadPhotoToServer";
 import { useDispatch } from "react-redux";
@@ -32,7 +28,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [name, setName] = useState("");
   const [region, setRegion] = useState("");
-  const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
  const dispatch=useDispatch()
 
@@ -58,31 +53,9 @@ export const CreatePostsScreen = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
-  // const writeDataToFirestore = async () => {
-  //   const photoUrl = await uploadPhotoToServer(photo);
-
-  //   try {
-  //     const docRef = await addDoc(collection(db, "posts"), {
-  //       photo:photoUrl,
-  //       name,
-  //       region,
-  //       likes:0,
-  //       location: {
-  //         latitude: location?.coords.latitude || "",
-  //         longitude: location?.coords.longitude || "",
-  //       },
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //     throw e;
-  //   }
-  // };
-
   const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      console.log("🚀 ~ takePhoto ~ uri:", uri)
       await MediaLibrary.createAssetAsync(uri);
       setPhoto(uri);
     }
@@ -90,18 +63,11 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const choosePhoto = async () => {
     const uri = await choosePhotoFromGallery()
-    console.log("🚀 ~ choosePhoto ~ uri:", uri)
     setPhoto(uri)
   };
 
   const publish = async () => {
     let location = await Location.getCurrentPositionAsync({});
-    console.log("🚀 ~ publish ~ location:", location);
-    // const coords = {
-    //   latitude: location.coords.latitude,
-    //   longitude: location.coords.longitude,
-    // };
-    await setLocation(location);
     const photoUrl = await uploadPhotoToServer(photo);
     dispatch(
       addPost({
@@ -109,23 +75,16 @@ export const CreatePostsScreen = ({ navigation }) => {
         name,
         region,
         likes: 0,
-        comments:[],
         location: {
           latitude: location?.coords.latitude || "",
           longitude: location?.coords.longitude || "",
         },
       })
     );
-    // await writeDataToFirestore();
     setName("");
     setRegion("");
     setPhoto("");
-    navigation.navigate("DefaultPostsScreen", {
-      photo,
-      name,
-      region,
-      location,
-    });
+    navigation.navigate("DefaultPostsScreen");
 
     
   };
@@ -134,7 +93,6 @@ export const CreatePostsScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.main}>
-          {/* <View style={styles.photo}> */}
           {photo ? (
             <Image source={{ uri: photo }} style={styles.photo} />
           ) : (
@@ -149,7 +107,6 @@ export const CreatePostsScreen = ({ navigation }) => {
               </TouchableOpacity>
             </Camera>
           )}
-          {/* </View> */}
           <TouchableOpacity onPress={choosePhoto}>
             <Text style={styles.addPhoto}>Загрузите фото</Text>
           </TouchableOpacity>
@@ -197,7 +154,6 @@ const styles = StyleSheet.create({
   },
   photo: {
     backgroundColor: "#F6F6F6",
-    // width: 343,
     height: 240,
     borderWidth: 1,
     borderColor: "#E8E8E8",
@@ -207,7 +163,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     overflow: "hidden",
   },
-  // picture: { width: "100%", height: "100%" },
   round: {
     position: "absolute",
     alignItems: "center",
@@ -276,7 +231,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   footer: {
-    // height: 83,
     flex: 0.1,
     backgroundColor: "#fff",
     flexDirection: "row",

@@ -3,14 +3,13 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   Image,
 } from "react-native";
-import { selectPosts, selectUser } from "../redux/selectors";
+import {  selectUser } from "../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import {
   logOut,
@@ -23,7 +22,6 @@ import { PostsList } from "../components/PostsList";
 export const ProfileScreen = ({ navigation }) => {
   const user = useSelector(selectUser);
   const { photoURL } = user;
-  const posts = useSelector(selectPosts);
   const dispatch = useDispatch();
 
   const addAvatar = async () => {
@@ -57,7 +55,7 @@ export const ProfileScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
         <Text style={styles.title}>{user.name}</Text>
-        <PostsList posts={posts} navigation={navigation} />
+        <PostsList navigation={navigation} />
       </View>
       {/* <View style={styles.footer}>
         <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />

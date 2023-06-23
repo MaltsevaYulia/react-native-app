@@ -96,19 +96,7 @@ export const authStateChangeUser = createAsyncThunk(
           reject
         );
       });
-
       return user;
-      // await onAuthStateChanged(auth, (user) => {
-      //     if (user) {
-      //       console.log("🚀 ~ onAuthStateChanged ~ user:", user)
-      //       // User is signed in, see docs for a list of available properties
-      //       // https://firebase.google.com/docs/reference/js/auth.user
-      //       const { uid, email, displayName, photoURL } = user;
-      //       return { uid, email, name: displayName, photoURL };
-      //     } else {
-      //       return null
-      //     }
-      // });
     } catch (error) {
       console.log("🚀 ~ error.message:", error.message);
       return thunkAPI.rejectWithValue(error.message);

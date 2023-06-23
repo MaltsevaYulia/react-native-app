@@ -8,10 +8,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addLikes } from "../redux/posts/postsOperations";
+import { selectPosts } from "../redux/selectors";
 
-export const PostsList = ({ posts, navigation }) => {
+export const PostsList = ({ navigation }) => {
+  const posts=useSelector(selectPosts)
   const dispatch = useDispatch();
 
   const addLike = (id, likes) => {
@@ -37,7 +39,6 @@ export const PostsList = ({ posts, navigation }) => {
                       navigation.navigate("CommentsScreen", {
                         photo: item.photo,
                         id: item.id,
-                        comments: item.comments,
                       })
                     }
                   >
@@ -93,7 +94,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
-    // marginBottom: 8,
   },
   picture: {
     display: "flex",

@@ -11,32 +11,23 @@ import {
   FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { db } from "../../firebase/config";
-import { selectComments, selectUser } from "../../redux/selectors";
+import { selectPosts, selectUser } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { collection, addDoc } from "firebase/firestore";
-import { async } from "@firebase/util";
-import { getCommentsFromFirestore } from "../../helpers/getDataFromFirestore/getCommentsFromFirestore";
 import { formatDateTime } from "../../helpers/formatDateTime";
-import {
-  addComment,
-  getComments,
-  getPosts,
-} from "../../redux/posts/postsOperations";
+import { addComment } from "../../redux/posts/postsOperations";
 
 const CommentsScreen = ({ route }) => {
-  const { photo, id, comments } = route.params;
-  // const comments = useSelector(selectComments);
+  const { photo, id } = route.params;
+  const posts = useSelector(selectPosts);
   const user = useSelector(selectUser);
   const [comment, setComment] = useState("");
-  // const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const comments= posts.find((item) => item.id === id).comments;
-  //   console.log("🚀 ~ CommentsScreen ~ comments:", comments);
-  //   setComments(comments);
-  // }, [posts]);
+  useEffect(() => {
+    const comments = posts.find((item) => item.id === id).comments;
+    setComments(comments);
+  }, [posts]);
 
   const sendComment = async () => {
     if (comment) {
@@ -46,39 +37,16 @@ const CommentsScreen = ({ route }) => {
         avatar: user.photoURL || "",
       };
       dispatch(addComment({ id, newComment }));
-      // const commentsRef = await collection(db, "posts", id, "comments");
-      // const commentsDocRef = await addDoc(commentsRef, {
-      //   comment,
-      //   date: Date.now(),
-      //   avatar: user.photoURL || "",
-      // });
-      // dispatch(getComments(id));
     }
-
     setComment("");
   };
-
-  useEffect(() => {
-    // async function fetchData() {
-    //   const comments = await getCommentsFromFirestore(id);
-    //   console.log("🚀 ~ useEffect ~ comments:", comments);
-    //   setComments(comments);
-    // }
-    // fetchData();
-    dispatch(getComments(id));
-  }, []);
-
-  // const getComment =async () => {
-  //   const comments = await getCommentFromFirestore(id);
-
-  // }
 
   return (
     <View style={styles.container}>
       <View style={styles.postContainer}>
         <Image source={{ uri: photo }} style={styles.photo} />
       </View>
-      <SafeAreaView>
+      <SafeAreaView style={styles.list}>
         <FlatList
           data={comments}
           keyExtractor={(item) => item.date.toString()}
@@ -131,17 +99,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   postContainer: {
-    // backgroundColor: "#F6F6F6",
-    // width: 343,
-
     height: 240,
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
     flexDirection: "column",
-    // justifyContent: "space-between",
-    // alignItems: "center",
     marginBottom: 8,
+    marginTop: 32,
   },
   photo: {
     width: "100%",
@@ -149,6 +113,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
+  },
+  list: {
+    flex: 1,
+    marginBottom: 31,
   },
   avatar: {
     width: 28,
@@ -161,16 +129,16 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
     alignItems: "center",
-    // flexDirection: "row-reverse",
   },
   currentUser: { flexDirection: "row" },
   guestUser: { flexDirection: "row-reverse" },
   commetText: {
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderRadius: 6,
-    // width: "100%",
     padding: 16,
     gap: 8,
+    width: 300,
+    alignItems: "flex-start",
   },
   comment: {
     fontFamily: "Roboto-Regular",
@@ -206,13 +174,11 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   arrow: {
-    // borderWidth: 1,
     width: 34,
     height: 34,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
-    // borderColor:transparant,
     backgroundColor: "#FF6C00",
   },
 });

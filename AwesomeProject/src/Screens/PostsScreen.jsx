@@ -1,112 +1,115 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  SafeAreaView,
-} from "react-native";
-import { AntDesign, Feather } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
 import { DefaultPostsScreen } from "./nestedScreens/DefaultPostsScreen";
 import CommentsScreen from "./nestedScreens/CommentsScreen";
 import MapScreen from "./nestedScreens/MapScreen";
+import { Feather } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/auth/authOperetion";
 
 const NestedScreens=createStackNavigator()
 
 export const PostsScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
+
   return (
     <NestedScreens.Navigator>
       <NestedScreens.Screen
         name="DefaultPostsScreen"
         component={DefaultPostsScreen}
-        options={{ headerShown: false }}
+        // options={{ headerShown: false }}
+        options={() => ({
+          title: "Публикации",
+          headerTitleStyle: styles.headerTitle,
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(logOut());
+              }}
+              style={{ paddingRight: 16 }}
+            >
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <NestedScreens.Screen
         name="CommentsScreen"
         component={CommentsScreen}
-        options={{ headerShown: false }}
+        // options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          tabBarStyle: { display: "none" },
+          title: "Комментарии",
+          headerTitleStyle: styles.headerTitle,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("DefaultPostsScreen");
+              }}
+              style={{ paddingLeft: 16 }}
+            >
+              <Feather name="arrow-left" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <NestedScreens.Screen
         name="MapScreen"
         component={MapScreen}
-        options={{ headerShown: false }}
+        // options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          tabBarStyle: { display: "none" },
+          title: "Карта",
+          headerTitleStyle: styles.headerTitle,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("DefaultPostsScreen");
+              }}
+              style={{ paddingLeft: 16 }}
+            >
+              <Feather name="arrow-left" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </NestedScreens.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  main: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 32,
-    paddingHorizontal: 16,
-  },
-  userWrapp: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  userInfo: {
-    // alignItems: 'center',
-    justifyContent: "center",
-  },
-  userName: {
-    fontFamily: "Roboto-Bold",
-    fontWeight: 700,
-    fontSize: 13,
-    lineHeight: 15,
-    color: "#212121",
-  },
-  userEmail: {
-    fontFamily: "Roboto-Regular",
-    fontWeight: 400,
-    fontSize: 11,
-    lineHeight: 13,
-    color: "rgba(33, 33, 33, 0.8)",
-  },
-  postContainer: {
-    // backgroundColor: "#F6F6F6",
-    // width: 343,
-    height: 240,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    borderRadius: 8,
-    // justifyContent: "center",
-    // alignItems: "center",
-    marginBottom: 8,
-  },
-  picture: {
-    width: "100%",
-    height: "100%",
-    overflow: "visible",
-  },
-  postName: {
+  headerTitle: {
     fontFamily: "Roboto-Medium",
+    fontSize: 17,
     fontWeight: 500,
-    fontSize: 16,
-    lineHeight: 19,
+    lineHeight: 22,
     color: "#212121",
+    paddingVertical: 11,
   },
-  location: {
-    fontFamily: "Roboto-Regular",
-    fontWeight: 400,
-    fontSize: 16,
-    lineHeight: 19,
-    textDecorationLine: "underline",
-    color: "#212121",
-  },
-  btn: {
-    width: 70,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FF6C00",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  // footer: {
+  //   // height: 83,
+  //   flex: 1,
+  //   // paddingHorizontal: 82,
+  //   paddingTop: 9,
+  //   backgroundColor: "#fff",
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   gap: 31,
+  //   ma: 9,
+  //   // borderTopWidth: 1,
+  //   // borderTopColor: "#E8E8E8",
+  //   // justifyContent: 'space-between'
+  // },
+  // btn: {
+  //   width: 70,
+  //   height: 40,
+  //   borderRadius: 20,
+  //   backgroundColor: "transparent",
+  //   // backgroundColor: "#F6F6F6",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
 });
+
+

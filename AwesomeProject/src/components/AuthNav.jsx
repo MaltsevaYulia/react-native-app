@@ -19,11 +19,11 @@ export const AuthNav = () => {
         component={RegistrationScreen}
         options={{ headerShown: false }}
       />
-      <MainStack.Screen
+      {/* <MainStack.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
     </MainStack.Navigator>
   );
 };
