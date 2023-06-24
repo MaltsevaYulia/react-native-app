@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Layout } from "../components/Layout";
 import { useNavigation } from "@react-navigation/native";
@@ -44,7 +43,6 @@ export const LoginScreen = () => {
 
   const onSubmit = () => {
     dispatch(logIn({ email, password }));
-    // navigation.navigate("Home");
   };
 
   return (
@@ -107,7 +105,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // flex: 0.6,
     justifyContent: "center",
   },
   title: {
@@ -131,7 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     marginHorizontal: 16,
-    // position: 'relative',
   },
   btn: {
     backgroundColor: "#FF6C00",

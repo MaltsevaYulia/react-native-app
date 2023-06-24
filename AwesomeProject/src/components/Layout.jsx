@@ -16,9 +16,6 @@ export const Layout = ({ children }) => {
           source={require("../assets/images/photo-bg.jpg")}
         >
           {children}
-          {/* <RegistrationScreen /> */}
-          {/* <LoginScreen /> */}
-          {/* <PostsScreen/> */}
           <StatusBar style="auto" />
         </ImageBackground>
       </View>
@@ -30,14 +27,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: 'center',
     justifyContent: "center",
   },
   bg: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
 });

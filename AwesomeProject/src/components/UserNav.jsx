@@ -3,7 +3,6 @@ import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
 import { useDispatch } from "react-redux";
 import { PostsScreen } from "../Screens/PostsScreen";
-import { logOut } from "../redux/auth/authOperetion";
 import { CreatePostsScreen } from "../Screens/CreatePostsScreen";
 import { ProfileScreen } from "../Screens/ProfileScreen";
 import { getPosts } from "../redux/posts/postsOperations";
@@ -106,6 +105,14 @@ export const UserNav = () => {
 };
 
 const styles = StyleSheet.create({
+  headerTitle: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 17,
+    fontWeight: 500,
+    lineHeight: 22,
+    color: "#212121",
+    paddingVertical: 11,
+  },
   footer: {
     flex: 1,
     paddingTop: 9,

@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { PostsList } from "../../components/PostsList";
-import { UserInfo } from "../../components/userInfo";
+import { UserInfo } from "../../components/UserInfo";
 
 export const DefaultPostsScreen = ({ navigation }) => {
   return (

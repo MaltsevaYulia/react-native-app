@@ -64,9 +64,7 @@ export const RegistrationScreen = () => {
   const choosePhoto = async () => {
     const img = await choosePhotoFromGallery();
     const uri = await uploadPhotoToServer(img);
-    console.log("🚀 ~ choosePhoto ~ uri:", uri);
-
-    setPhoto(uri);
+        setPhoto(uri);
   };
 
   return (
@@ -149,7 +147,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // flex: 1,
     justifyContent: "center",
   },
   avaWrapper: {
@@ -171,9 +168,7 @@ const styles = StyleSheet.create({
   },
   addBtn: {
     position: "absolute",
-    // borderColor: '#FF6C00',
     borderRadius: "50%",
-    // borderWidth: 1,
     backgroundColor: "#FFFFFF",
     width: 25,
     height: 25,
@@ -183,9 +178,8 @@ const styles = StyleSheet.create({
   },
   isAva: {
     position: "absolute",
-    // borderColor: '#FF6C00',
     borderRadius: "50%",
-    // borderWidth: 1,
+
     backgroundColor: "#FFFFFF",
     width: 25,
     height: 25,
@@ -206,18 +200,15 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 12,
     borderWidth: 1,
-    // borderColor: '#E8E8E8',
     borderRadius: 8,
     padding: 16,
     backgroundColor: "#F6F6F6",
-    // placeholderTextColor: '#BDBDBD',
     color: "#212121",
     fontFamily: "Roboto-Regular",
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
     marginHorizontal: 16,
-    // position: 'relative',
   },
   btn: {
     backgroundColor: "#FF6C00",
@@ -262,7 +253,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#F6F6F6",
     marginHorizontal: 16,
-    // marginBottom: 12,
   },
   passText: {
     color: "#212121",
