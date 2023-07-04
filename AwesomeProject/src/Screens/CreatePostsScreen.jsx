@@ -75,6 +75,7 @@ export const CreatePostsScreen = ({ navigation }) => {
         name,
         region,
         likes: 0,
+        comments:[],
         location: {
           latitude: location?.coords.latitude || "",
           longitude: location?.coords.longitude || "",

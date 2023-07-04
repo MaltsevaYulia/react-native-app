@@ -2,8 +2,17 @@ import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { PostsList } from "../../components/PostsList";
 import { UserInfo } from "../../components/UserInfo";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getPosts } from "../../redux/posts/postsOperations";
 
 export const DefaultPostsScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.main}>

@@ -1,22 +1,16 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity, StyleSheet, View, MyButton } from "react-native";
-import { useDispatch } from "react-redux";
+
 import { PostsScreen } from "../Screens/PostsScreen";
 import { CreatePostsScreen } from "../Screens/CreatePostsScreen";
 import { ProfileScreen } from "../Screens/ProfileScreen";
-import { getPosts } from "../redux/posts/postsOperations";
-import { useEffect } from "react";
+
 
 const MaineTab = createBottomTabNavigator();
 
 export const UserNav = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getPosts());
-  }, []);
-
+  
   return (
     <MaineTab.Navigator
       screenOptions={({ route }) => ({
